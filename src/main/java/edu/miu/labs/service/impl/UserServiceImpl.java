@@ -1,7 +1,9 @@
 package edu.miu.labs.service.impl;
 
 import edu.miu.labs.entities.User;
+import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.UserDto;
+import edu.miu.labs.entities.dtos.UserRequestDto;
 import edu.miu.labs.repositories.UserRepository;
 import edu.miu.labs.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -28,7 +30,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findPostById(long id) {
+    public UserDto findUserById(long id) {
         return userRepository.findById(id).map(u -> modelMapper.map(u, UserDto.class)).orElse(null);
+    }
+
+    @Override
+    public UserDto saveUser(UserRequestDto userRequestDto) {
+        User user = modelMapper.map(userRequestDto, User.class);
+        userRepository.save(user);
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public List<PostDto> getPostsByUserId(long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return (user != null && user.getPosts() != null) ? modelMapper.map(user.getPosts(), new TypeToken<List<PostDto>>() {
+        }.getType()) : List.of();
     }
 }

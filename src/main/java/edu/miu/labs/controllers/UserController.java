@@ -1,12 +1,12 @@
 package edu.miu.labs.controllers;
 
+import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.UserDto;
+import edu.miu.labs.entities.dtos.UserRequestDto;
 import edu.miu.labs.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,11 +31,27 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getPost(@PathVariable long id) {
-        UserDto p = userService.findPostById(id);
+        UserDto p = userService.findUserById(id);
         if (p == null) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.ok(p);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@RequestBody UserRequestDto userRequestDto) {
+        UserDto createdUser = userService.saveUser(userRequestDto);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/posts")
+    public ResponseEntity<List<PostDto>> getPosts(@PathVariable long id) {
+        List<PostDto> posts = userService.getPostsByUserId(id);
+        if (posts.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(posts);
         }
     }
 }

@@ -5,8 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class UserDto {
-    private Long id;
+public class UserRequestDto {
     private String name;
-    private List<PostDto> posts;
+    private List<PostRequestDto> posts;
 }

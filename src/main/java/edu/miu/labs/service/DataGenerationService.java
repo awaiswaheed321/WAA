@@ -46,9 +46,6 @@ public class DataGenerationService {
         user2.setName("User Two");
         user2.setPosts(List.of(post3));
 
-        postRepository.save(post1);
-        postRepository.save(post2);
-        postRepository.save(post3);
         userRepository.save(user1);
         userRepository.save(user2);
     }
