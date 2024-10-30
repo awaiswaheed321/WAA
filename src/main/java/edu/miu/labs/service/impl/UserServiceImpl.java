@@ -47,4 +47,11 @@ public class UserServiceImpl implements UserService {
         return (user != null && user.getPosts() != null) ? modelMapper.map(user.getPosts(), new TypeToken<List<PostDto>>() {
         }.getType()) : List.of();
     }
+
+    @Override
+    public List<UserDto> getUsersWithMultiplePosts() {
+        List<User> users = userRepository.getUsersWithMultiplePosts();
+        return modelMapper.map(users, new TypeToken<List<UserDto>>() {
+        }.getType());
+    }
 }

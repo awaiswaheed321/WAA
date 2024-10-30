@@ -54,4 +54,14 @@ public class UserController {
             return ResponseEntity.ok(posts);
         }
     }
+
+    @GetMapping("/multiple-posts")
+    public ResponseEntity<List<UserDto>> getUsersWithMoreThanOnePosts() {
+        List<UserDto> dtos = userService.getUsersWithMultiplePosts();
+        if (dtos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(dtos);
+        }
+    }
 }

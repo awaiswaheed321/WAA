@@ -14,4 +14,6 @@ public interface UserService {
     UserDto saveUser(UserRequestDto userRequestDto);
 
     List<PostDto> getPostsByUserId(long id);
+
+    List<UserDto> getUsersWithMultiplePosts();
 }
