@@ -69,40 +69,4 @@ public class PostServiceImpl implements PostService {
         return modelMapper.map(posts, new TypeToken<List<PostDto>>() {
         }.getType());
     }
-
-    @PostConstruct
-    public void addSampleData() {
-        // Sample Post objects
-        Post post1 = new Post();
-        post1.setContent("This is the content of the first post.");
-        post1.setTitle("First Post Title");
-        post1.setAuthor("Alice");
-
-        Post post2 = new Post();
-        post2.setContent("This is the content of the second post.");
-        post2.setTitle("Second Post Title");
-        post2.setAuthor("Bob");
-
-        Post post3 = new Post();
-        post3.setContent("This is the content of the third post.");
-        post3.setTitle("Third Post Title");
-        post3.setAuthor("Charlie");
-
-        Post post4 = new Post();
-        post4.setContent("This is the content of the fourth post.");
-        post4.setTitle("Fourth Post Title");
-        post4.setAuthor("David");
-
-        Post post5 = new Post();
-        post5.setContent("This is the content of the fifth post.");
-        post5.setTitle("Fifth Post Title");
-        post5.setAuthor("Eve");
-
-        // Save the posts to the database
-        postRepository.save(post1);
-        postRepository.save(post2);
-        postRepository.save(post3);
-        postRepository.save(post4);
-        postRepository.save(post5);
-    }
 }
