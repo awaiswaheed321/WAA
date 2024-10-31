@@ -1,6 +1,7 @@
 package edu.miu.labs.service;
 
 import edu.miu.labs.entities.dtos.PostDto;
+import edu.miu.labs.entities.dtos.PostRequestDto;
 import edu.miu.labs.entities.dtos.UserDto;
 import edu.miu.labs.entities.dtos.UserRequestDto;
 
@@ -16,4 +17,6 @@ public interface UserService {
     List<PostDto> getPostsByUserId(long id);
 
     List<UserDto> getUsersWithMultiplePosts();
+
+    void savePost(long id, PostRequestDto postRequestDto);
 }

@@ -6,9 +6,6 @@ import edu.miu.labs.entities.dtos.PostRequestDto;
 import java.util.List;
 
 public interface PostService {
-    List<PostDto> findAllPosts();
-
-    PostDto savePost(PostRequestDto postRequestDto);
 
     PostDto findPostById(Long id);
 

@@ -1,6 +1,7 @@
 package edu.miu.labs.controllers;
 
 import edu.miu.labs.entities.dtos.PostDto;
+import edu.miu.labs.entities.dtos.PostRequestDto;
 import edu.miu.labs.entities.dtos.UserDto;
 import edu.miu.labs.entities.dtos.UserRequestDto;
 import edu.miu.labs.service.LoggerService;
@@ -81,4 +82,13 @@ public class UserController {
             return ResponseEntity.ok(usersWithMultiplePosts);
         }
     }
+
+    @PostMapping("/{id}/post")
+    public ResponseEntity<PostDto> createPost(@PathVariable long id, @RequestBody PostRequestDto postRequestDto) {
+        logger.info(UserController.class.getName(), String.format("POST /api/v1/user/%d/post called with request body: %s", id, postRequestDto));
+        userService.savePost(id, postRequestDto);
+        logger.info(UserController.class.getName(), String.format("POST /api/v1/user/%d/post - Post created successfully.", id));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
 }

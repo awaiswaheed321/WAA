@@ -5,6 +5,7 @@ import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
 import edu.miu.labs.repositories.PostRepository;
 import edu.miu.labs.service.PostService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -24,26 +25,19 @@ public class PostServiceImpl implements PostService {
         this.modelMapper = modelMapper;
     }
 
-    public List<PostDto> findAllPosts() {
-        List<Post> posts = postRepository.findAll();
-        return modelMapper.map(posts, new TypeToken<List<PostDto>>() {
-        }.getType());
-    }
-
-    public PostDto savePost(PostRequestDto postRequestDto) {
-        Post post = modelMapper.map(postRequestDto, Post.class);
-        Post savedPost = postRepository.save(post);
-        return modelMapper.map(savedPost, PostDto.class);
-    }
-
     public PostDto findPostById(Long id) {
         return postRepository.findById(id)
                 .map(post -> modelMapper.map(post, PostDto.class))
-                .orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + id));
     }
 
     public void deletePostById(Long id) {
-        postRepository.deleteById(id);
+        Optional<Post> post = postRepository.findById(id);
+        if (post.isPresent()) {
+            postRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Post not found with id: " + id);
+        }
     }
 
     @Transactional
@@ -56,7 +50,7 @@ public class PostServiceImpl implements PostService {
                     post.setAuthor(postRequestDto.getAuthor());
                     return modelMapper.map(post, PostDto.class);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + id));
     }
 
     @Override
