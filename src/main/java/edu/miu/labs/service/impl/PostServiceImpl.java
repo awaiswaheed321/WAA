@@ -5,12 +5,14 @@ import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
 import edu.miu.labs.repositories.PostRepository;
 import edu.miu.labs.service.PostService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -44,15 +46,17 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public PostDto updatePost(Long id, PostRequestDto postRequestDto) {
-        return postRepository.findById(id).map(existingPost -> {
-            existingPost.setContent(postRequestDto.getContent());
-            existingPost.setTitle(postRequestDto.getTitle());
-            existingPost.setAuthor(postRequestDto.getAuthor());
-            Post updatedPost = postRepository.save(existingPost);
-            return modelMapper.map(updatedPost, PostDto.class);
-        }).orElse(null);
+        return postRepository.findById(id)
+                .map(post -> {
+                    post.setContent(postRequestDto.getContent());
+                    post.setTitle(postRequestDto.getTitle());
+                    post.setAuthor(postRequestDto.getAuthor());
+                    return modelMapper.map(post, PostDto.class);
+                })
+                .orElse(null);
     }
 
     @Override
