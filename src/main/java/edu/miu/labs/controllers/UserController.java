@@ -6,6 +6,7 @@ import edu.miu.labs.entities.dtos.UserDto;
 import edu.miu.labs.entities.dtos.UserRequestDto;
 import edu.miu.labs.service.LoggerService;
 import edu.miu.labs.service.UserService;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -143,4 +144,25 @@ public class UserController {
         logger.info(UserController.class.getName(), String.format("POST /api/v1/user/%d/post - Post created successfully.", id));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    /**
+     * Retrieves users who have more than the specified number of posts.
+     *
+     * @param n The minimum number of posts a user must have (must be 0 or greater).
+     * @return A ResponseEntity containing a list of UserDto if users are found,
+     * or a no content status if no users meet the criteria.
+     */
+    @GetMapping("/with-posts-more-than/{n}")
+    public ResponseEntity<List<UserDto>> getUserWithMoreThanNPosts(@PathVariable @Min(0) int n) {
+        logger.info(UserController.class.getName(), "GET /api/v1/users/with-posts-more-than/" + n + " called with path variable n: " + n);
+        List<UserDto> users = userService.getUserWithMoreThanNPosts(n);
+        if (users.isEmpty()) {
+            logger.info(UserController.class.getName(), "GET /api/v1/users/with-posts-more-than/" + n + " - No users found with more than " + n + " posts.");
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.info(UserController.class.getName(), "GET /api/v1/users/with-posts-more-than/" + n + " - Users found: " + users.size());
+            return ResponseEntity.ok(users);
+        }
+    }
+
 }

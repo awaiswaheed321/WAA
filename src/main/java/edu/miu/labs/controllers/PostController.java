@@ -105,4 +105,24 @@ public class PostController {
         logger.info(PostController.class.getName(), String.format("POST /api/v1/post/%d/comment - Comment created successfully.", id));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    /**
+     * Retrieves posts that match a given title.
+     *
+     * @param title The title to match with the posts to retrieve.
+     * @return A ResponseEntity containing a list of PostDto if found, or a no content status if not found.
+     */
+    @GetMapping("/search/title/{title}")
+    public ResponseEntity<List<PostDto>> getPostMatchingTitle(@PathVariable String title) {
+        logger.info(PostController.class.getName(), "GET /api/v1/post/" + title + " called with path variable title: " + title);
+        List<PostDto> posts = postService.getPostsMatchingTitle(title);
+        if (posts.isEmpty()) {
+            logger.info(PostController.class.getName(), "GET /api/v1/post/" + title + " - No posts found with title containing: " + title);
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.info(PostController.class.getName(), "GET /api/v1/post/" + title + " - Posts found: " + posts.size());
+            return ResponseEntity.ok(posts);
+        }
+    }
+
 }

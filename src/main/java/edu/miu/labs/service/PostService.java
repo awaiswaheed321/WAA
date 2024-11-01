@@ -17,4 +17,6 @@ public interface PostService {
     List<PostDto> getFilteredPostsByAuthorName(String authorName, String authorContaining);
 
     void saveComment(long id, CommentRequestDto commentRequestDto);
+
+    List<PostDto> getPostsMatchingTitle(String partialTitle);
 }

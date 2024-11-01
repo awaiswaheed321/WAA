@@ -87,4 +87,11 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("User not found with id: " + id);
         }
     }
+
+    @Override
+    public List<PostDto> getPostsMatchingTitle(String partialTitle) {
+        List<Post> posts = postRepository.getPostsMatchingTitle(partialTitle);
+        return modelMapper.map(posts, new TypeToken<List<PostDto>>() {
+        }.getType());
+    }
 }

@@ -89,4 +89,11 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("Post not found with id: " + id);
         }
     }
+
+    @Override
+    public List<UserDto> getUserWithMoreThanNPosts(int n) {
+        List<User> users = userRepository.getUserWithMoreThanNPosts(n);
+        return modelMapper.map(users, new TypeToken<List<UserDto>>() {
+        }.getType());
+    }
 }

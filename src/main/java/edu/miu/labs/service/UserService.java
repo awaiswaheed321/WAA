@@ -1,5 +1,6 @@
 package edu.miu.labs.service;
 
+import edu.miu.labs.entities.User;
 import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
 import edu.miu.labs.entities.dtos.UserDto;
@@ -21,4 +22,6 @@ public interface UserService {
     void savePost(long id, PostRequestDto postRequestDto);
 
     void deleteUserById(long id);
+
+    List<UserDto> getUserWithMoreThanNPosts(int n);
 }
