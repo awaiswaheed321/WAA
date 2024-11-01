@@ -127,22 +127,23 @@ public class PostController {
     }
 
     /**
-     * Retrieves posts associated with a specific user by ID.
+     * Retrieves comments associated with a specific post by ID.
      *
-     * @param id The ID of the user whose posts are to be retrieved.
-     * @return A ResponseEntity containing a list of PostDto if posts are found, or no content if empty.
+     * @param id The ID of the post whose comments are to be retrieved.
+     * @return A ResponseEntity containing a list of CommentDto if comments are found, or no content if empty.
      */
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<CommentDto>> getComments(@PathVariable long id) {
-        logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts called with path variable id: " + id);
+        logger.info(UserController.class.getName(), "GET /api/v1/post/" + id + "/comments called with path variable id: " + id);
         List<CommentDto> comments = postService.getCommentsByPostId(id);
         if (comments.isEmpty()) {
-            logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts - No posts found for user.");
+            logger.info(UserController.class.getName(), "GET /api/v1/post/" + id + "/comments - No comments found for post with ID: " + id);
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts - Posts found: " + comments);
+            logger.info(UserController.class.getName(), "GET /api/v1/post/" + id + "/comments - Comments found: Count = " + comments.size());
             return ResponseEntity.ok(comments);
         }
     }
+
 
 }
