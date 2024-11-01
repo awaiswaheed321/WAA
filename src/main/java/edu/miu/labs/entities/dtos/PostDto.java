@@ -11,5 +11,5 @@ public class PostDto {
     private String content;
     private String title;
     private String author;
-    private List<Comment> comments;
+    private List<CommentDto> comments;
 }

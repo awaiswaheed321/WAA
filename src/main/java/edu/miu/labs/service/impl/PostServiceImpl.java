@@ -1,6 +1,8 @@
 package edu.miu.labs.service.impl;
 
+import edu.miu.labs.entities.Comment;
 import edu.miu.labs.entities.Post;
+import edu.miu.labs.entities.dtos.CommentRequestDto;
 import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
 import edu.miu.labs.repositories.PostRepository;
@@ -65,5 +67,24 @@ public class PostServiceImpl implements PostService {
         }
         return modelMapper.map(posts, new TypeToken<List<PostDto>>() {
         }.getType());
+    }
+
+    @Override
+    @Transactional
+    public void saveComment(long id, CommentRequestDto commentRequestDto) {
+        Optional<Post> postOptional = postRepository.findById(id);
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            Comment comment = modelMapper.map(commentRequestDto, Comment.class);
+            if (post.getComments() == null) {
+                List<Comment> posts = new ArrayList<>();
+                posts.add(comment);
+                post.setComments(posts);
+            } else {
+                post.getComments().add(comment);
+            }
+        } else {
+            throw new EntityNotFoundException("User not found with id: " + id);
+        }
     }
 }

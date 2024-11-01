@@ -143,5 +143,4 @@ public class UserController {
         logger.info(UserController.class.getName(), String.format("POST /api/v1/user/%d/post - Post created successfully.", id));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
 }

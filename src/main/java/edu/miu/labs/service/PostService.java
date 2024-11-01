@@ -1,5 +1,6 @@
 package edu.miu.labs.service;
 
+import edu.miu.labs.entities.dtos.CommentRequestDto;
 import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
 
@@ -14,4 +15,6 @@ public interface PostService {
     PostDto updatePost(Long id, PostRequestDto postRequestDto);
 
     List<PostDto> getFilteredPostsByAuthorName(String authorName, String authorContaining);
+
+    void saveComment(long id, CommentRequestDto commentRequestDto);
 }

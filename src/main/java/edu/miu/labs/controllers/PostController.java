@@ -1,9 +1,11 @@
 package edu.miu.labs.controllers;
 
+import edu.miu.labs.entities.dtos.CommentRequestDto;
 import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
 import edu.miu.labs.service.LoggerService;
 import edu.miu.labs.service.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,5 +89,20 @@ public class PostController {
         postService.deletePostById(id);
         logger.info(PostController.class.getName(), "DELETE /api/v1/post/" + id + " - Post deleted.");
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Creates a new comment for a specific post by ID.
+     *
+     * @param id                The ID of the user for whom to create the post.
+     * @param commentRequestDto The data for the post to create.
+     * @return A ResponseEntity with HTTP status 201 if the post is successfully created.
+     */
+    @PostMapping("/{id}/comment")
+    public ResponseEntity<Void> createComment(@PathVariable long id, @RequestBody CommentRequestDto commentRequestDto) {
+        logger.info(PostController.class.getName(), String.format("POST /api/v1/post/%d/comment called with request body: %s", id, commentRequestDto));
+        postService.saveComment(id, commentRequestDto);
+        logger.info(PostController.class.getName(), String.format("POST /api/v1/post/%d/comment - Comment created successfully.", id));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

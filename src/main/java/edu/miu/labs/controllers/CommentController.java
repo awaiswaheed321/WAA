@@ -41,22 +41,18 @@ public class CommentController {
     /**
      * Retrieves a list of comments, optionally filtered by author or a substring of the author's name.
      *
-     * @param author           The exact author name to filter comments by (optional).
-     * @param authorContaining A substring of the author's name to filter comments by (optional).
      * @return A ResponseEntity containing a list of CommentDto objects, or no content if no comments are found.
      */
     @GetMapping
-    public ResponseEntity<List<CommentDto>> getPosts(
-            @RequestParam(value = "author", required = false) String author,
-            @RequestParam(value = "author-containing", required = false) String authorContaining) {
-        logger.info(CommentController.class.getName(), "GET /api/v1/comment called with request params - author: " + author + ", author-containing: " + authorContaining);
-        List<CommentDto> posts = commentService.getAllComments();
-        if (posts.isEmpty()) {
-            logger.info(CommentController.class.getName(), "GET /api/v1/comment - No comments found for the given filters.");
+    public ResponseEntity<List<CommentDto>> getAllComments() {
+        logger.info(CommentController.class.getName(), "GET /api/v1/comment called.");
+        List<CommentDto> comments = commentService.getAllComments();
+        if (comments.isEmpty()) {
+            logger.info(CommentController.class.getName(), "GET /api/v1/comment - No comments found.");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(CommentController.class.getName(), "GET /api/v1/comment - Comments found: " + posts);
-            return ResponseEntity.ok(posts);
+            logger.info(CommentController.class.getName(), "GET /api/v1/comment - Comments found: " + comments);
+            return ResponseEntity.ok(comments);
         }
     }
 
