@@ -116,6 +116,20 @@ public class UserController {
     }
 
     /**
+     * Deletes a specific user by its ID.
+     *
+     * @param id The ID of the user to delete.
+     * @return A ResponseEntity with a success status if deletion is successful.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable long id) {
+        logger.info(UserController.class.getName(), "DELETE /api/v1/user/" + id + " called with path variable id: " + id);
+        userService.deleteUserById(id);
+        logger.info(UserController.class.getName(), "DELETE /api/v1/user/" + id + " - User deleted.");
+        return ResponseEntity.ok().build();
+    }
+
+    /**
      * Creates a new post for a specific user by ID.
      *
      * @param id             The ID of the user for whom to create the post.

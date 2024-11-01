@@ -19,4 +19,6 @@ public interface UserService {
     List<UserDto> getUsersWithMultiplePosts();
 
     void savePost(long id, PostRequestDto postRequestDto);
+
+    void deleteUserById(long id);
 }

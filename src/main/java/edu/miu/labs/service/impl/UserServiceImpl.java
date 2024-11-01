@@ -6,7 +6,6 @@ import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
 import edu.miu.labs.entities.dtos.UserDto;
 import edu.miu.labs.entities.dtos.UserRequestDto;
-import edu.miu.labs.repositories.PostRepository;
 import edu.miu.labs.repositories.UserRepository;
 import edu.miu.labs.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,12 +22,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final PostRepository postRepository;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PostRepository postRepository) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
-        this.postRepository = postRepository;
     }
 
     @Override
@@ -80,6 +77,16 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             throw new EntityNotFoundException("User not found with id: " + id);
+        }
+    }
+
+    @Override
+    public void deleteUserById(long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Post not found with id: " + id);
         }
     }
 }
