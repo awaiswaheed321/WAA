@@ -1,11 +1,9 @@
 package edu.miu.labs.service.impl;
 
+import edu.miu.labs.entities.Comment;
 import edu.miu.labs.entities.Post;
 import edu.miu.labs.entities.User;
-import edu.miu.labs.entities.dtos.PostDto;
-import edu.miu.labs.entities.dtos.PostRequestDto;
-import edu.miu.labs.entities.dtos.UserDto;
-import edu.miu.labs.entities.dtos.UserRequestDto;
+import edu.miu.labs.entities.dtos.*;
 import edu.miu.labs.repositories.UserRepository;
 import edu.miu.labs.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -102,5 +100,31 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.getUsersWithPostsContainingTitle(title);
         return modelMapper.map(users, new TypeToken<List<UserDto>>() {
         }.getType());
+    }
+
+    @Override
+    public CommentDto getCommentByUserPostCommentId(long userId, long postId, long commentId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+        Post post = user.getPosts().stream()
+                .filter(p -> p.getId() == postId)
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId + " for User ID: " + userId));
+        Comment comment = post.getComments().stream()
+                .filter(c -> c.getId() == commentId)
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + commentId + " for Post ID: " + postId));
+        return modelMapper.map(comment, CommentDto.class);
+    }
+
+    @Override
+    public PostDto getPostByUserPostId(long userId, long postId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+        Post post = user.getPosts().stream()
+                .filter(p -> p.getId() == postId)
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with ID: " + postId + " for User ID: " + userId));
+        return modelMapper.map(post, PostDto.class);
     }
 }

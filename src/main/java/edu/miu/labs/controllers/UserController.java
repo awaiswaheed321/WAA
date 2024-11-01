@@ -1,9 +1,6 @@
 package edu.miu.labs.controllers;
 
-import edu.miu.labs.entities.dtos.PostDto;
-import edu.miu.labs.entities.dtos.PostRequestDto;
-import edu.miu.labs.entities.dtos.UserDto;
-import edu.miu.labs.entities.dtos.UserRequestDto;
+import edu.miu.labs.entities.dtos.*;
 import edu.miu.labs.service.LoggerService;
 import edu.miu.labs.service.UserService;
 import jakarta.validation.constraints.Min;
@@ -184,5 +181,37 @@ public class UserController {
             return ResponseEntity.ok(users);
         }
     }
+
+    /**
+     * Retrieves a specific comment associated with a given user and post by their IDs.
+     *
+     * @param userId    The ID of the user who owns the post.
+     * @param postId    The ID of the post to which the comment belongs.
+     * @param commentId The ID of the comment to retrieve.
+     * @return A ResponseEntity containing the CommentDto if found.
+     */
+    @GetMapping("/{userId}/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<CommentDto> getCommentByUserPostCommentId(@PathVariable long userId, @PathVariable long postId, @PathVariable long commentId) {
+        logger.info(UserController.class.getName(), "GET /api/v1/user/" + userId + "/posts/" + postId + "/comments/" + commentId + " - Fetching comment with ID: " + commentId + " for user ID: " + userId + " and post ID: " + postId);
+        CommentDto comment = userService.getCommentByUserPostCommentId(userId, postId, commentId);
+        logger.info(UserController.class.getName(), "GET /api/v1/user/" + userId + "/posts/" + postId + "/comments/" + commentId + " - Comment found: " + comment);
+        return ResponseEntity.ok(comment);
+    }
+
+    /**
+     * Retrieves a specific post associated with a given user by their IDs.
+     *
+     * @param userId The ID of the user who owns the post.
+     * @param postId The ID of the post to be retrieved.
+     * @return A ResponseEntity containing the PostDto if found, or not found status if the post does not exist.
+     */
+    @GetMapping("/{userId}/posts/{postId}")
+    public ResponseEntity<PostDto> getPostByUserPostId(@PathVariable long userId, @PathVariable long postId) {
+        logger.info(UserController.class.getName(), "GET /api/v1/user/" + userId + "/posts/" + postId + " - Fetching post with ID: " + postId + " for user ID: " + userId);
+        PostDto post = userService.getPostByUserPostId(userId, postId);
+        logger.info(UserController.class.getName(), "GET /api/v1/user/" + userId + "/posts/" + postId + " - Post found: " + post);
+        return ResponseEntity.ok(post);
+    }
+
 
 }

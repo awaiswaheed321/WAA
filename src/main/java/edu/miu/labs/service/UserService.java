@@ -1,9 +1,6 @@
 package edu.miu.labs.service;
 
-import edu.miu.labs.entities.dtos.PostDto;
-import edu.miu.labs.entities.dtos.PostRequestDto;
-import edu.miu.labs.entities.dtos.UserDto;
-import edu.miu.labs.entities.dtos.UserRequestDto;
+import edu.miu.labs.entities.dtos.*;
 
 import java.util.List;
 
@@ -25,4 +22,8 @@ public interface UserService {
     List<UserDto> getUserWithMoreThanNPosts(int n);
 
     List<UserDto> getUsersWithPostsContainingTitle(String title);
+
+    CommentDto getCommentByUserPostCommentId(long userId, long postId, long commentId);
+
+    PostDto getPostByUserPostId(long userId, long postId);
 }
