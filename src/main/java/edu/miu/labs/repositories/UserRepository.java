@@ -14,4 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE SIZE(u.posts) > :n")
     List<User> getUserWithMoreThanNPosts(int n);
+
+    @Query("SELECT u FROM User u JOIN u.posts p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%'))")
+    List<User> getUsersWithPostsContainingTitle(String title);
 }

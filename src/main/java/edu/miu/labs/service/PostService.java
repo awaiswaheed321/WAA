@@ -1,5 +1,6 @@
 package edu.miu.labs.service;
 
+import edu.miu.labs.entities.dtos.CommentDto;
 import edu.miu.labs.entities.dtos.CommentRequestDto;
 import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
@@ -19,4 +20,6 @@ public interface PostService {
     void saveComment(long id, CommentRequestDto commentRequestDto);
 
     List<PostDto> getPostsMatchingTitle(String partialTitle);
+
+    List<CommentDto> getCommentsByPostId(long id);
 }

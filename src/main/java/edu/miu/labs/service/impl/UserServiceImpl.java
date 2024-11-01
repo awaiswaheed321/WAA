@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<PostDto> getPostsByUserId(long id) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
         return (user != null && user.getPosts() != null) ? modelMapper.map(user.getPosts(), new TypeToken<List<PostDto>>() {
         }.getType()) : List.of();
     }
@@ -93,6 +93,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getUserWithMoreThanNPosts(int n) {
         List<User> users = userRepository.getUserWithMoreThanNPosts(n);
+        return modelMapper.map(users, new TypeToken<List<UserDto>>() {
+        }.getType());
+    }
+
+    @Override
+    public List<UserDto> getUsersWithPostsContainingTitle(String title) {
+        List<User> users = userRepository.getUsersWithPostsContainingTitle(title);
         return modelMapper.map(users, new TypeToken<List<UserDto>>() {
         }.getType());
     }

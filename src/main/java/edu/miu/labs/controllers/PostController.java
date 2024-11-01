@@ -1,5 +1,6 @@
 package edu.miu.labs.controllers;
 
+import edu.miu.labs.entities.dtos.CommentDto;
 import edu.miu.labs.entities.dtos.CommentRequestDto;
 import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
@@ -122,6 +123,25 @@ public class PostController {
         } else {
             logger.info(PostController.class.getName(), "GET /api/v1/post/" + title + " - Posts found: " + posts.size());
             return ResponseEntity.ok(posts);
+        }
+    }
+
+    /**
+     * Retrieves posts associated with a specific user by ID.
+     *
+     * @param id The ID of the user whose posts are to be retrieved.
+     * @return A ResponseEntity containing a list of PostDto if posts are found, or no content if empty.
+     */
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentDto>> getComments(@PathVariable long id) {
+        logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts called with path variable id: " + id);
+        List<CommentDto> comments = postService.getCommentsByPostId(id);
+        if (comments.isEmpty()) {
+            logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts - No posts found for user.");
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts - Posts found: " + comments);
+            return ResponseEntity.ok(comments);
         }
     }
 

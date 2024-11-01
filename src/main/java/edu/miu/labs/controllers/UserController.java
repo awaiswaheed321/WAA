@@ -165,4 +165,24 @@ public class UserController {
         }
     }
 
+    /**
+     * Retrieves users who have posts with titles containing the specified text (case-insensitive).
+     *
+     * @param title The text to search for within the titles of users' posts.
+     * @return A ResponseEntity containing a list of UserDto if users with matching posts are found,
+     * or a no content status if no matches are found.
+     */
+    @GetMapping("/posts/title-contains/{title}")
+    public ResponseEntity<List<UserDto>> getUsersWithPostsContainingTitle(@PathVariable String title) {
+        logger.info(UserController.class.getName(), "User search initiated for posts with titles containing: '" + title + "'");
+        List<UserDto> users = userService.getUsersWithPostsContainingTitle(title);
+        if (users.isEmpty()) {
+            logger.info(UserController.class.getName(), "No users found with posts containing title text: '" + title + "'");
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.info(UserController.class.getName(), "Users found with posts matching title text '" + title + "': Count = " + users.size());
+            return ResponseEntity.ok(users);
+        }
+    }
+
 }

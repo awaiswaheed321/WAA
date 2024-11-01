@@ -2,6 +2,7 @@ package edu.miu.labs.service.impl;
 
 import edu.miu.labs.entities.Comment;
 import edu.miu.labs.entities.Post;
+import edu.miu.labs.entities.dtos.CommentDto;
 import edu.miu.labs.entities.dtos.CommentRequestDto;
 import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
@@ -93,5 +94,12 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postRepository.getPostsMatchingTitle(partialTitle);
         return modelMapper.map(posts, new TypeToken<List<PostDto>>() {
         }.getType());
+    }
+
+    @Override
+    public List<CommentDto> getCommentsByPostId(long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Post with id " + id + " not found"));
+        return (post != null && post.getComments() != null) ? modelMapper.map(post.getComments(), new TypeToken<List<CommentDto>>() {
+        }.getType()) : List.of();
     }
 }
