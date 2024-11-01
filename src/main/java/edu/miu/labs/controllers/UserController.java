@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing users and their posts.
+ * Provides endpoints to retrieve, create, and update user data and associated posts.
+ */
 @RestController
 @RequestMapping("api/v1/user")
 public class UserController {
@@ -23,6 +27,11 @@ public class UserController {
         this.logger = logger;
     }
 
+    /**
+     * Retrieves all users.
+     *
+     * @return A ResponseEntity containing a list of UserDto if users are found, or no content if empty.
+     */
     @GetMapping
     public ResponseEntity<List<UserDto>> getUsers() {
         logger.info(UserController.class.getName(), "GET /api/v1/user called to retrieve all users.");
@@ -36,6 +45,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Retrieves a specific user by ID.
+     *
+     * @param id The ID of the user to retrieve.
+     * @return A ResponseEntity containing the UserDto if found, or no content if not found.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable long id) {
         logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + " called with path variable id: " + id);
@@ -49,6 +64,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Creates a new user.
+     *
+     * @param userRequestDto The data for the user to create.
+     * @return A ResponseEntity with the created UserDto and HTTP status 201.
+     */
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserRequestDto userRequestDto) {
         logger.info(UserController.class.getName(), "POST /api/v1/user called with request body: " + userRequestDto);
@@ -57,6 +78,12 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
+    /**
+     * Retrieves posts associated with a specific user by ID.
+     *
+     * @param id The ID of the user whose posts are to be retrieved.
+     * @return A ResponseEntity containing a list of PostDto if posts are found, or no content if empty.
+     */
     @GetMapping("/{id}/posts")
     public ResponseEntity<List<PostDto>> getPosts(@PathVariable long id) {
         logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts called with path variable id: " + id);
@@ -70,6 +97,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Retrieves users who have more than one post.
+     *
+     * @return A ResponseEntity containing a list of UserDto with multiple posts, or no content if none found.
+     */
     @GetMapping("/multiple-posts")
     public ResponseEntity<List<UserDto>> getUsersWithMoreThanOnePosts() {
         logger.info(UserController.class.getName(), "GET /api/v1/user/multiple-posts called to retrieve users with more than one post.");
@@ -83,6 +115,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Creates a new post for a specific user by ID.
+     *
+     * @param id             The ID of the user for whom to create the post.
+     * @param postRequestDto The data for the post to create.
+     * @return A ResponseEntity with HTTP status 201 if the post is successfully created.
+     */
     @PostMapping("/{id}/post")
     public ResponseEntity<PostDto> createPost(@PathVariable long id, @RequestBody PostRequestDto postRequestDto) {
         logger.info(UserController.class.getName(), String.format("POST /api/v1/user/%d/post called with request body: %s", id, postRequestDto));
