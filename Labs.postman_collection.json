@@ -245,6 +245,31 @@
 					"response": []
 				},
 				{
+					"name": "Get Comment by User, Post, Comment Id Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/user/1/posts/1/comments/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"1",
+								"posts",
+								"1",
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Post by User, Post ID",
 					"request": {
 						"method": "GET",
