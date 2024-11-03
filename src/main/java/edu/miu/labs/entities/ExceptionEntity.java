@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(name = "exceptions")
 public class ExceptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

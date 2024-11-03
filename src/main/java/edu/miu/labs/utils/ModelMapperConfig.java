@@ -1,4 +1,4 @@
-package edu.miu.labs.helpers;
+package edu.miu.labs.utils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
