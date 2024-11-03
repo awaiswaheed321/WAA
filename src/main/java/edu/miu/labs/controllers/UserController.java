@@ -215,5 +215,13 @@ public class UserController {
         return ResponseEntity.ok(post);
     }
 
-
+    /**
+     * GET endpoint for testing purposes to verify that the ExceptionAspect
+     * correctly logs exceptions to the database. This method intentionally
+     * throws a RuntimeException with a test message to confirm logging behavior.
+     */
+    @GetMapping("exception")
+    public void throwExceptionMethod() {
+        throw new RuntimeException("This is exception message for testing purposes");
+    }
 }

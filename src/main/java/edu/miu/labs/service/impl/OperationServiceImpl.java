@@ -21,6 +21,6 @@ public class OperationServiceImpl implements OperationService {
         Operation operation = new Operation();
         operation.setPrinciple(SecurityUtils.getPrinciple());
         operation.setOperation(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        this.operationLoggerRepository.save(operation);
+        operationLoggerRepository.save(operation);
     }
 }
