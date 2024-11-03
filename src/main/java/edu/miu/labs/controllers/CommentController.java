@@ -3,7 +3,6 @@ package edu.miu.labs.controllers;
 import edu.miu.labs.entities.dtos.CommentDto;
 import edu.miu.labs.entities.dtos.CommentRequestDto;
 import edu.miu.labs.service.CommentService;
-import edu.miu.labs.service.LoggerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +16,9 @@ import java.util.List;
 @RequestMapping("api/v1/comment")
 public class CommentController {
     private final CommentService commentService;
-    private final LoggerService logger;
 
-    public CommentController(CommentService commentService, LoggerService logger) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.logger = logger;
     }
 
     /**
@@ -32,9 +29,7 @@ public class CommentController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<CommentDto> getComment(@PathVariable long id) {
-        logger.info(CommentController.class.getName(), "GET /api/v1/comment/" + id + " called with path variable id: " + id);
         CommentDto comment = commentService.findCommentById(id);
-        logger.info(CommentController.class.getName(), "GET /api/v1/comment/" + id + " - Comment found: " + comment);
         return ResponseEntity.ok(comment);
     }
 
@@ -45,13 +40,10 @@ public class CommentController {
      */
     @GetMapping
     public ResponseEntity<List<CommentDto>> getAllComments() {
-        logger.info(CommentController.class.getName(), "GET /api/v1/comment called.");
         List<CommentDto> comments = commentService.getAllComments();
         if (comments.isEmpty()) {
-            logger.info(CommentController.class.getName(), "GET /api/v1/comment - No comments found.");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(CommentController.class.getName(), "GET /api/v1/comment - Comments found: " + comments);
             return ResponseEntity.ok(comments);
         }
     }
@@ -65,9 +57,7 @@ public class CommentController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<CommentDto> updatePost(@PathVariable long id, @RequestBody CommentRequestDto commentRequestDto) {
-        logger.info(CommentController.class.getName(), "PUT /api/v1/comment/" + id + " called with path variable id: " + id + " and request body: " + commentRequestDto);
         CommentDto updatedPost = commentService.updateComment(id, commentRequestDto);
-        logger.info(CommentController.class.getName(), "PUT /api/v1/comment/" + id + " - Comment updated: " + updatedPost);
         return ResponseEntity.ok(updatedPost);
     }
 
@@ -79,9 +69,7 @@ public class CommentController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable long id) {
-        logger.info(CommentController.class.getName(), "DELETE /api/v1/comment/" + id + " called with path variable id: " + id);
         commentService.deleteCommentById(id);
-        logger.info(CommentController.class.getName(), "DELETE /api/v1/comment/" + id + " - Comment deleted.");
         return ResponseEntity.ok().build();
     }
 }

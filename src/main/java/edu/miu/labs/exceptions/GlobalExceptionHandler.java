@@ -1,8 +1,9 @@
 package edu.miu.labs.exceptions;
 
 import edu.miu.labs.entities.dtos.ErrorDto;
-import edu.miu.labs.service.LoggerService;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,15 +15,11 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final LoggerService logger;
-
-    public GlobalExceptionHandler(LoggerService logger) {
-        this.logger = logger;
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorDto> handleResourceNotFoundException(EntityNotFoundException ex, WebRequest request) {
-        logger.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
+        LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
         ErrorDto errorResponse = new ErrorDto(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage()
@@ -32,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorDto> handleNoResourceFoundException(Exception ex, WebRequest request) {
-        logger.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
+        LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
         ErrorDto errorResponse = new ErrorDto(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage()
@@ -42,7 +39,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<ErrorDto> handleHandlerMethodValidationException(Exception ex, WebRequest request) {
-        logger.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
+        LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
         ErrorDto errorResponse = new ErrorDto(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage()
@@ -53,7 +50,7 @@ public class GlobalExceptionHandler {
     // Handle generic exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleGlobalException(Exception ex, WebRequest request) {
-        logger.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
+        LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
         ErrorDto errorResponse = new ErrorDto(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 ex.getMessage()

@@ -4,7 +4,6 @@ import edu.miu.labs.entities.dtos.CommentDto;
 import edu.miu.labs.entities.dtos.CommentRequestDto;
 import edu.miu.labs.entities.dtos.PostDto;
 import edu.miu.labs.entities.dtos.PostRequestDto;
-import edu.miu.labs.service.LoggerService;
 import edu.miu.labs.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +19,9 @@ import java.util.List;
 @RequestMapping("api/v1/post")
 public class PostController {
     private final PostService postService;
-    private final LoggerService logger;
 
-    public PostController(PostService postService, LoggerService logger) {
+    public PostController(PostService postService) {
         this.postService = postService;
-        this.logger = logger;
     }
 
     /**
@@ -35,9 +32,7 @@ public class PostController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPost(@PathVariable long id) {
-        logger.info(PostController.class.getName(), "GET /api/v1/post/" + id + " called with path variable id: " + id);
         PostDto post = postService.findPostById(id);
-        logger.info(PostController.class.getName(), "GET /api/v1/post/" + id + " - Post found: " + post);
         return ResponseEntity.ok(post);
     }
 
@@ -52,13 +47,10 @@ public class PostController {
     public ResponseEntity<List<PostDto>> getPosts(
             @RequestParam(value = "author", required = false) String author,
             @RequestParam(value = "author-containing", required = false) String authorContaining) {
-        logger.info(PostController.class.getName(), "GET /api/v1/post called with request params - author: " + author + ", author-containing: " + authorContaining);
         List<PostDto> posts = postService.getFilteredPostsByAuthorName(author, authorContaining);
         if (posts.isEmpty()) {
-            logger.info(PostController.class.getName(), "GET /api/v1/post - No posts found for the given filters.");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(PostController.class.getName(), "GET /api/v1/post - Posts found: " + posts);
             return ResponseEntity.ok(posts);
         }
     }
@@ -72,9 +64,7 @@ public class PostController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePost(@PathVariable long id, @RequestBody PostRequestDto postRequestDto) {
-        logger.info(PostController.class.getName(), "PUT /api/v1/post/" + id + " called with path variable id: " + id + " and request body: " + postRequestDto);
         PostDto updatedPost = postService.updatePost(id, postRequestDto);
-        logger.info(PostController.class.getName(), "PUT /api/v1/post/" + id + " - Post updated: " + updatedPost);
         return ResponseEntity.ok(updatedPost);
     }
 
@@ -86,9 +76,7 @@ public class PostController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable long id) {
-        logger.info(PostController.class.getName(), "DELETE /api/v1/post/" + id + " called with path variable id: " + id);
         postService.deletePostById(id);
-        logger.info(PostController.class.getName(), "DELETE /api/v1/post/" + id + " - Post deleted.");
         return ResponseEntity.ok().build();
     }
 
@@ -101,9 +89,7 @@ public class PostController {
      */
     @PostMapping("/{id}/comment")
     public ResponseEntity<Void> createComment(@PathVariable long id, @RequestBody CommentRequestDto commentRequestDto) {
-        logger.info(PostController.class.getName(), String.format("POST /api/v1/post/%d/comment called with request body: %s", id, commentRequestDto));
         postService.saveComment(id, commentRequestDto);
-        logger.info(PostController.class.getName(), String.format("POST /api/v1/post/%d/comment - Comment created successfully.", id));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -115,13 +101,10 @@ public class PostController {
      */
     @GetMapping("/search/title/{title}")
     public ResponseEntity<List<PostDto>> getPostMatchingTitle(@PathVariable String title) {
-        logger.info(PostController.class.getName(), "GET /api/v1/post/" + title + " called with path variable title: " + title);
         List<PostDto> posts = postService.getPostsMatchingTitle(title);
         if (posts.isEmpty()) {
-            logger.info(PostController.class.getName(), "GET /api/v1/post/" + title + " - No posts found with title containing: " + title);
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(PostController.class.getName(), "GET /api/v1/post/" + title + " - Posts found: " + posts.size());
             return ResponseEntity.ok(posts);
         }
     }
@@ -134,13 +117,10 @@ public class PostController {
      */
     @GetMapping("/{id}/comments")
     public ResponseEntity<List<CommentDto>> getComments(@PathVariable long id) {
-        logger.info(UserController.class.getName(), "GET /api/v1/post/" + id + "/comments called with path variable id: " + id);
         List<CommentDto> comments = postService.getCommentsByPostId(id);
         if (comments.isEmpty()) {
-            logger.info(UserController.class.getName(), "GET /api/v1/post/" + id + "/comments - No comments found for post with ID: " + id);
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(UserController.class.getName(), "GET /api/v1/post/" + id + "/comments - Comments found: Count = " + comments.size());
             return ResponseEntity.ok(comments);
         }
     }

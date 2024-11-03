@@ -2,7 +2,6 @@ package edu.miu.labs.controllers;
 
 import edu.miu.labs.aspects.annotations.ExecutionTime;
 import edu.miu.labs.entities.dtos.*;
-import edu.miu.labs.service.LoggerService;
 import edu.miu.labs.service.UserService;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
@@ -19,11 +18,9 @@ import java.util.List;
 @RequestMapping("api/v1/user")
 public class UserController {
     private final UserService userService;
-    private final LoggerService logger;
 
-    public UserController(UserService userService, LoggerService logger) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.logger = logger;
     }
 
     /**
@@ -33,13 +30,10 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<List<UserDto>> getUsers() {
-        logger.info(UserController.class.getName(), "GET /api/v1/user called to retrieve all users.");
         List<UserDto> users = userService.getUsers();
         if (users.isEmpty()) {
-            logger.info(UserController.class.getName(), "GET /api/v1/user - No users found.");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(UserController.class.getName(), "GET /api/v1/user - Users retrieved: " + users);
             return ResponseEntity.ok(users);
         }
     }
@@ -53,13 +47,10 @@ public class UserController {
     @ExecutionTime
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable long id) {
-        logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + " called with path variable id: " + id);
         UserDto user = userService.findUserById(id);
         if (user == null) {
-            logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + " - User not found.");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + " - User found: " + user);
             return ResponseEntity.ok(user);
         }
     }
@@ -72,9 +63,7 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserRequestDto userRequestDto) {
-        logger.info(UserController.class.getName(), "POST /api/v1/user called with request body: " + userRequestDto);
         UserDto createdUser = userService.saveUser(userRequestDto);
-        logger.info(UserController.class.getName(), "POST /api/v1/user - User created: " + createdUser);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
@@ -86,13 +75,10 @@ public class UserController {
      */
     @GetMapping("/{id}/posts")
     public ResponseEntity<List<PostDto>> getPosts(@PathVariable long id) {
-        logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts called with path variable id: " + id);
         List<PostDto> posts = userService.getPostsByUserId(id);
         if (posts.isEmpty()) {
-            logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts - No posts found for user.");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + "/posts - Posts found: " + posts);
             return ResponseEntity.ok(posts);
         }
     }
@@ -104,13 +90,10 @@ public class UserController {
      */
     @GetMapping("/multiple-posts")
     public ResponseEntity<List<UserDto>> getUsersWithMoreThanOnePosts() {
-        logger.info(UserController.class.getName(), "GET /api/v1/user/multiple-posts called to retrieve users with more than one post.");
         List<UserDto> usersWithMultiplePosts = userService.getUsersWithMultiplePosts();
         if (usersWithMultiplePosts.isEmpty()) {
-            logger.info(UserController.class.getName(), "GET /api/v1/user/multiple-posts - No users found with multiple posts.");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(UserController.class.getName(), "GET /api/v1/user/multiple-posts - Users with multiple posts: " + usersWithMultiplePosts);
             return ResponseEntity.ok(usersWithMultiplePosts);
         }
     }
@@ -123,9 +106,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable long id) {
-        logger.info(UserController.class.getName(), "DELETE /api/v1/user/" + id + " called with path variable id: " + id);
         userService.deleteUserById(id);
-        logger.info(UserController.class.getName(), "DELETE /api/v1/user/" + id + " - User deleted.");
         return ResponseEntity.ok().build();
     }
 
@@ -138,9 +119,7 @@ public class UserController {
      */
     @PostMapping("/{id}/post")
     public ResponseEntity<PostDto> createPost(@PathVariable long id, @RequestBody PostRequestDto postRequestDto) {
-        logger.info(UserController.class.getName(), String.format("POST /api/v1/user/%d/post called with request body: %s", id, postRequestDto));
         userService.savePost(id, postRequestDto);
-        logger.info(UserController.class.getName(), String.format("POST /api/v1/user/%d/post - Post created successfully.", id));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -153,13 +132,10 @@ public class UserController {
      */
     @GetMapping("/with-posts-more-than/{n}")
     public ResponseEntity<List<UserDto>> getUserWithMoreThanNPosts(@PathVariable @Min(0) int n) {
-        logger.info(UserController.class.getName(), "GET /api/v1/users/with-posts-more-than/" + n + " called with path variable n: " + n);
         List<UserDto> users = userService.getUserWithMoreThanNPosts(n);
         if (users.isEmpty()) {
-            logger.info(UserController.class.getName(), "GET /api/v1/users/with-posts-more-than/" + n + " - No users found with more than " + n + " posts.");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(UserController.class.getName(), "GET /api/v1/users/with-posts-more-than/" + n + " - Users found: " + users.size());
             return ResponseEntity.ok(users);
         }
     }
@@ -173,13 +149,10 @@ public class UserController {
      */
     @GetMapping("/posts/title-contains/{title}")
     public ResponseEntity<List<UserDto>> getUsersWithPostsContainingTitle(@PathVariable String title) {
-        logger.info(UserController.class.getName(), "User search initiated for posts with titles containing: '" + title + "'");
         List<UserDto> users = userService.getUsersWithPostsContainingTitle(title);
         if (users.isEmpty()) {
-            logger.info(UserController.class.getName(), "No users found with posts containing title text: '" + title + "'");
             return ResponseEntity.noContent().build();
         } else {
-            logger.info(UserController.class.getName(), "Users found with posts matching title text '" + title + "': Count = " + users.size());
             return ResponseEntity.ok(users);
         }
     }
@@ -194,9 +167,7 @@ public class UserController {
      */
     @GetMapping("/{userId}/posts/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDto> getCommentByUserPostCommentId(@PathVariable long userId, @PathVariable long postId, @PathVariable long commentId) {
-        logger.info(UserController.class.getName(), "GET /api/v1/user/" + userId + "/posts/" + postId + "/comments/" + commentId + " - Fetching comment with ID: " + commentId + " for user ID: " + userId + " and post ID: " + postId);
         CommentDto comment = userService.getCommentByUserPostCommentId(userId, postId, commentId);
-        logger.info(UserController.class.getName(), "GET /api/v1/user/" + userId + "/posts/" + postId + "/comments/" + commentId + " - Comment found: " + comment);
         return ResponseEntity.ok(comment);
     }
 
@@ -209,9 +180,7 @@ public class UserController {
      */
     @GetMapping("/{userId}/posts/{postId}")
     public ResponseEntity<PostDto> getPostByUserPostId(@PathVariable long userId, @PathVariable long postId) {
-        logger.info(UserController.class.getName(), "GET /api/v1/user/" + userId + "/posts/" + postId + " - Fetching post with ID: " + postId + " for user ID: " + userId);
         PostDto post = userService.getPostByUserPostId(userId, postId);
-        logger.info(UserController.class.getName(), "GET /api/v1/user/" + userId + "/posts/" + postId + " - Post found: " + post);
         return ResponseEntity.ok(post);
     }
 
@@ -221,7 +190,7 @@ public class UserController {
      * throws a RuntimeException with a test message to confirm logging behavior.
      */
     @GetMapping("exception")
-    public void throwExceptionMethod() {
+    public void getTestException() {
         throw new RuntimeException("This is exception message for testing purposes");
     }
 }
