@@ -1,5 +1,6 @@
 package edu.miu.labs.controllers;
 
+import edu.miu.labs.aspects.annotations.ExecutionTime;
 import edu.miu.labs.entities.dtos.*;
 import edu.miu.labs.service.LoggerService;
 import edu.miu.labs.service.UserService;
@@ -49,6 +50,7 @@ public class UserController {
      * @param id The ID of the user to retrieve.
      * @return A ResponseEntity containing the UserDto if found, or no content if not found.
      */
+    @ExecutionTime
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable long id) {
         logger.info(UserController.class.getName(), "GET /api/v1/user/" + id + " called with path variable id: " + id);
