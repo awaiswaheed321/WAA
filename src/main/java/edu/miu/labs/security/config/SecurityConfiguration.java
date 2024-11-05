@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
+                        .requestMatchers("api/v1/admin/**").hasAuthority(Roles.ADMIN.name())
                         .requestMatchers("/api/v1/user/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
                         .requestMatchers("/api/v1/post/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
                         .requestMatchers("/api/v1/comment/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
