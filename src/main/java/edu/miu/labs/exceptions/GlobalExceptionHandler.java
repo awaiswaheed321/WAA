@@ -23,10 +23,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleResourceNotFoundException(BadCredentialsException ex, WebRequest request) {
         LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
         ErrorDto errorResponse = new ErrorDto(
-                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EntityExistsException.class)

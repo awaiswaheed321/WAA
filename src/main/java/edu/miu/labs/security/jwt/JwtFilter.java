@@ -1,6 +1,5 @@
 package edu.miu.labs.security.jwt;
 
-import edu.miu.labs.security.dto.AccountDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
