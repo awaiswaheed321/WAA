@@ -3,6 +3,7 @@ package edu.miu.labs.controllers;
 import edu.miu.labs.aspects.annotations.ExecutionTime;
 import edu.miu.labs.entities.dtos.*;
 import edu.miu.labs.service.UserService;
+import edu.miu.labs.utils.SecurityUtils;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -101,7 +102,7 @@ public class UserController {
      * @return A ResponseEntity with a success status if deletion is successful.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable long id) {
         userService.deleteUserById(id);
         return ResponseEntity.ok().build();
     }
@@ -109,13 +110,12 @@ public class UserController {
     /**
      * Creates a new post for a specific user by ID.
      *
-     * @param id             The ID of the user for whom to create the post.
      * @param postRequestDto The data for the post to create.
      * @return A ResponseEntity with HTTP status 201 if the post is successfully created.
      */
-    @PostMapping("/{id}/post")
-    public ResponseEntity<PostDto> createPost(@PathVariable long id, @RequestBody PostRequestDto postRequestDto) {
-        userService.savePost(id, postRequestDto);
+    @PostMapping("/post")
+    public ResponseEntity<PostDto> createPost(@RequestBody PostRequestDto postRequestDto) {
+        userService.savePost(postRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

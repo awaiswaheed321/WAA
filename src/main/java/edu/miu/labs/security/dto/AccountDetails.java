@@ -3,6 +3,7 @@ package edu.miu.labs.security.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.miu.labs.entities.Role;
 import edu.miu.labs.entities.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,12 +14,16 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class AccountDetails implements UserDetails {
+    @Getter
+    private final Long id;
     private final String email;
+
     @JsonIgnore
     private String password;
     private final List<Role> roles;
 
     public AccountDetails(User user) {
+        this.id = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.roles = user.getRoles();

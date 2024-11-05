@@ -1,6 +1,7 @@
 package edu.miu.labs.exceptions;
 
 import edu.miu.labs.entities.dtos.ErrorDto;
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -21,6 +22,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorDto> handleResourceNotFoundException(BadCredentialsException ex, WebRequest request) {
+        LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
+        ErrorDto errorResponse = new ErrorDto(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorDto> handleResourceNotFoundException(JwtException ex, WebRequest request) {
         LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
         ErrorDto errorResponse = new ErrorDto(
                 HttpStatus.BAD_REQUEST.value(),

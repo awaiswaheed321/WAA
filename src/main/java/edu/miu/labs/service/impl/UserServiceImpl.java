@@ -9,6 +9,8 @@ import edu.miu.labs.repositories.RoleRepository;
 import edu.miu.labs.repositories.UserRepository;
 import edu.miu.labs.service.UserService;
 import edu.miu.labs.utils.Roles;
+import edu.miu.labs.utils.SecurityUtils;
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -50,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto saveUser(UserRequestDto userRequestDto) {
         User existing = userRepository.findByEmail(userRequestDto.getEmail());
-        if(existing != null) {
+        if (existing != null) {
             throw new EntityExistsException("User already exists with this email.");
         }
         User user = modelMapper.map(userRequestDto, User.class);
@@ -77,7 +79,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void savePost(long id, PostRequestDto postRequestDto) {
+    public void savePost(PostRequestDto postRequestDto) {
+        Long id = SecurityUtils.getId();
+        if (id == null) {
+            throw new JwtException("ID not found in principal.");
+        }
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
