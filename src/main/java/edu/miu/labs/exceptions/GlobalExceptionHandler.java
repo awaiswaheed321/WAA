@@ -1,6 +1,7 @@
 package edu.miu.labs.exceptions;
 
 import edu.miu.labs.entities.dtos.ErrorDto;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleResourceNotFoundException(BadCredentialsException ex, WebRequest request) {
         LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
         ErrorDto errorResponse = new ErrorDto(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<ErrorDto> handleEntityExistsException(EntityExistsException ex, WebRequest request) {
+        LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
+        ErrorDto errorResponse = new ErrorDto(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

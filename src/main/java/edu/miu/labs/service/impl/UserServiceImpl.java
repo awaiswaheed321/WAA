@@ -9,6 +9,7 @@ import edu.miu.labs.repositories.RoleRepository;
 import edu.miu.labs.repositories.UserRepository;
 import edu.miu.labs.service.UserService;
 import edu.miu.labs.utils.Roles;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -48,6 +49,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto saveUser(UserRequestDto userRequestDto) {
+        User existing = userRepository.findByEmail(userRequestDto.getEmail());
+        if(existing != null) {
+            throw new EntityExistsException("User already exists with this email.");
+        }
         User user = modelMapper.map(userRequestDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByRoleIgnoreCase(Roles.USER.name());
