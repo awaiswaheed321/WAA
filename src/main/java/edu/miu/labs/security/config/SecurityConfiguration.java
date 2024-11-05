@@ -1,6 +1,7 @@
 package edu.miu.labs.security.config;
 
 import edu.miu.labs.security.jwt.JwtFilter;
+import edu.miu.labs.utils.Roles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,9 +40,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
-                        .requestMatchers("/api/v1/user/**").authenticated()
-                        .requestMatchers("/api/v1/post/**").authenticated()
-                        .requestMatchers("/api/v1/comment/**").authenticated()
+                        .requestMatchers("/api/v1/user/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
+                        .requestMatchers("/api/v1/post/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
+                        .requestMatchers("/api/v1/comment/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
