@@ -124,6 +124,4 @@ public class PostController {
             return ResponseEntity.ok(comments);
         }
     }
-
-
 }
