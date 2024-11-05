@@ -48,17 +48,30 @@ public class JwtHelper {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
+            var claims = Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(Constants.JWT_SECRET.getBytes()))
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(token)
+                    .getBody();
+            if (!"access".equals(claims.get("type"))) {
+                throw new IllegalArgumentException("Invalid token type");
+            }
+            Date expiration = claims.getExpiration();
+            if (expiration.before(new Date())) {
+                throw new ExpiredJwtException(null, claims, "Token has expired");
+            }
+            String email = claims.getSubject();
+            if (email == null || email.isEmpty()) {
+                throw new IllegalArgumentException("Invalid token: no email found");
+            }
             return true;
         } catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
                  IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Invalid JWT token: " + e.getMessage());
         }
         return false;
     }
+
 
     public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
         Date now = new Date();
