@@ -2,10 +2,12 @@ package edu.miu.labs.service;
 
 import edu.miu.labs.entities.Comment;
 import edu.miu.labs.entities.Post;
+import edu.miu.labs.entities.Role;
 import edu.miu.labs.entities.User;
-import edu.miu.labs.repositories.PostRepository;
+import edu.miu.labs.repositories.RoleRepository;
 import edu.miu.labs.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -14,15 +16,26 @@ import java.util.List;
 @Service
 public class DataGenerationService {
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    public DataGenerationService(UserRepository userRepository, PostRepository postRepository) {
+    public DataGenerationService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-        this.postRepository = postRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @PostConstruct
     public void addSampleData() {
+        Role admin = new Role();
+        admin.setRole("ADMIN");
+
+        Role user = new Role();
+        user.setRole("USER");
+
+        roleRepository.save(admin);
+        roleRepository.save(user);
+
         Comment comment1 = new Comment();
         comment1.setName("This is comment 1");
 
@@ -65,11 +78,17 @@ public class DataGenerationService {
 
         User user1 = new User();
         user1.setName("User One");
+        user1.setEmail("alice@gmail.com");
+        user1.setPassword(passwordEncoder.encode("alice"));
         user1.setPosts(Arrays.asList(post1, post2));
+        user1.setRoles(List.of(admin));
 
         User user2 = new User();
         user2.setName("User Two");
+        user2.setEmail("bob@gmail.com");
+        user2.setPassword(passwordEncoder.encode("bob"));
         user2.setPosts(List.of(post3));
+        user2.setRoles(List.of(user));
 
         userRepository.save(user1);
         userRepository.save(user2);

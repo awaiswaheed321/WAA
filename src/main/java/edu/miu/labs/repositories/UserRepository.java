@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u JOIN u.posts p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<User> getUsersWithPostsContainingTitle(String title);
+
+    User findByEmail(String username);
 }
