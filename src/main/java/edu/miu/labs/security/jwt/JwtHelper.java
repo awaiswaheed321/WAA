@@ -1,5 +1,6 @@
 package edu.miu.labs.security.jwt;
 
+import edu.miu.labs.utils.Constants;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -9,39 +10,36 @@ import java.util.Map;
 
 @Component
 public class JwtHelper {
-    private final String secret = "f0943ff2-0e9d-4fef-b830-537bde464e5d";
-    private final long accessTokenExpiration = 15 * 60 * 1000; // 15 minutes
-    private final long refreshTokenExpiration = 7 * 24 * 60 * 60 * 1000; // 7 days
 
     public String generateToken(String email) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + accessTokenExpiration);
+        Date expiryDate = new Date(now.getTime() + Constants.ACCESS_TOKEN_EXPIRATION);
 
         return Jwts.builder()
                 .claim("sub", email)
                 .claim("iat", now)
                 .claim("exp", expiryDate)
                 .claim("type", "access")
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(Constants.JWT_SECRET.getBytes()))
                 .compact();
     }
 
     public String generateRefreshToken(String email) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + refreshTokenExpiration);
+        Date expiryDate = new Date(now.getTime() + Constants.REFRESH_TOKEN_EXPIRATION);
 
         return Jwts.builder()
                 .claim("sub", email)
                 .claim("iat", now)
                 .claim("exp", expiryDate)
                 .claim("type", "refresh")
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(Constants.JWT_SECRET.getBytes()))
                 .compact();
     }
 
     public String getSubject(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                .setSigningKey(Keys.hmacShaKeyFor(Constants.JWT_SECRET.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -51,7 +49,7 @@ public class JwtHelper {
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .setSigningKey(Keys.hmacShaKeyFor(Constants.JWT_SECRET.getBytes()))
                     .build()
                     .parseClaimsJws(token);
             return true;
@@ -64,14 +62,14 @@ public class JwtHelper {
 
     public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + refreshTokenExpiration);
+        Date expiryDate = new Date(now.getTime() + Constants.REFRESH_TOKEN_EXPIRATION);
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS512)
+                .signWith(Keys.hmacShaKeyFor(Constants.JWT_SECRET.getBytes()), SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -79,7 +77,7 @@ public class JwtHelper {
         String result = null;
         try {
             result = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .setSigningKey(Keys.hmacShaKeyFor(Constants.JWT_SECRET.getBytes()))
                     .build()
                     .parseClaimsJws(token)
                     .getBody()
