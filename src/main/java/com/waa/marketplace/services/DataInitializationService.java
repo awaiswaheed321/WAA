@@ -6,6 +6,7 @@ import com.waa.marketplace.enums.Role;
 import com.waa.marketplace.repositories.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,12 +19,13 @@ public class DataInitializationService {
     private final OrderRepository orderRepository;
     private final ReviewRepository reviewRepository;
     private final CategoryRepository categoryRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public DataInitializationService(
             BuyerRepository buyerRepository,
             SellerRepository sellerRepository,
-            ProductRepository productRepository, AdminRepository adminRepository, OrderRepository orderRepository, ReviewRepository reviewRepository, CategoryRepository categoryRepository) {
+            ProductRepository productRepository, AdminRepository adminRepository, OrderRepository orderRepository, ReviewRepository reviewRepository, CategoryRepository categoryRepository, PasswordEncoder passwordEncoder) {
         this.buyerRepository = buyerRepository;
         this.sellerRepository = sellerRepository;
         this.productRepository = productRepository;
@@ -31,6 +33,7 @@ public class DataInitializationService {
         this.orderRepository = orderRepository;
         this.reviewRepository = reviewRepository;
         this.categoryRepository = categoryRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
@@ -39,19 +42,18 @@ public class DataInitializationService {
         User adminUser = new User();
         adminUser.setName("System Admin");
         adminUser.setEmail("admin@example.com");
-        adminUser.setPassword("admin123");
+        adminUser.setPassword(passwordEncoder.encode("admin123"));
         adminUser.setRole(Role.ADMIN.name());
 
         Admin admin = new Admin();
         admin.setUser(adminUser);
         adminRepository.save(admin);
 
-
         // Initialize Buyers
         User buyerUser1 = new User();
         buyerUser1.setName("John Doe");
         buyerUser1.setEmail("john.doe@example.com");
-        buyerUser1.setPassword("password123");
+        buyerUser1.setPassword(passwordEncoder.encode("john123"));
         buyerUser1.setRole(Role.BUYER.name());
 
         Buyer buyer1 = new Buyer();
@@ -63,7 +65,7 @@ public class DataInitializationService {
         User buyerUser2 = new User();
         buyerUser2.setName("Jane Smith");
         buyerUser2.setEmail("jane.smith@example.com");
-        buyerUser2.setPassword("password123");
+        buyerUser2.setPassword(passwordEncoder.encode("jane123"));
         buyerUser2.setRole(Role.BUYER.name());
 
         Buyer buyer2 = new Buyer();
@@ -72,12 +74,11 @@ public class DataInitializationService {
         buyer2.setBillingAddress("101 Pine Ave");
         buyerRepository.save(buyer2);
 
-
         // Initialize Sellers
         User sellerUser1 = new User();
         sellerUser1.setName("Alice Johnson");
         sellerUser1.setEmail("alice.johnson@example.com");
-        sellerUser1.setPassword("securepass123");
+        sellerUser1.setPassword(passwordEncoder.encode("alice123"));
         sellerUser1.setRole(Role.SELLER.name());
 
         Seller seller1 = new Seller();
@@ -88,7 +89,7 @@ public class DataInitializationService {
         User sellerUser2 = new User();
         sellerUser2.setName("Bob Brown");
         sellerUser2.setEmail("bob.brown@example.com");
-        sellerUser2.setPassword("securepass456");
+        sellerUser2.setPassword(passwordEncoder.encode("bob123"));
         sellerUser2.setRole(Role.SELLER.name());
 
         Seller seller2 = new Seller();
