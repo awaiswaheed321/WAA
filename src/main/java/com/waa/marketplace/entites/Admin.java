@@ -1,30 +1,19 @@
 package com.waa.marketplace.entites;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Admin {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String password;
+public class Admin extends User {
 
     @CreationTimestamp
     private LocalDateTime createdAt;

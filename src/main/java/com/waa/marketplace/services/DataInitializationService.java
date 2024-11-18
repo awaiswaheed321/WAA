@@ -38,7 +38,7 @@ public class DataInitializationService {
         Admin admin = new Admin();
         admin.setName("System Admin");
         admin.setEmail("admin@example.com");
-        admin.setPassword("admin123"); // Encrypt in production
+        admin.setPassword("admin123");
         adminRepository.save(admin);
 
 
@@ -46,7 +46,7 @@ public class DataInitializationService {
         Buyer buyer1 = new Buyer();
         buyer1.setName("John Doe");
         buyer1.setEmail("john.doe@example.com");
-        buyer1.setPassword("password123"); // Encrypt in production
+        buyer1.setPassword("password123");
         buyerRepository.save(buyer1);
 
         Buyer buyer2 = new Buyer();
@@ -88,10 +88,10 @@ public class DataInitializationService {
 
         // Initialize Orders
         Order order1 = new Order();
-        order1.setBuyer(buyer1); // Assuming buyer1 is already initialized
-        order1.setProduct(product1); // Assuming product1 is already initialized
+        order1.setBuyer(buyer1);
+        order1.setProduct(product1);
         order1.setQuantity(2);
-        order1.setTotalPrice(product1.getPrice() * 2); // Calculate total price
+        order1.setTotalPrice(product1.getPrice() * 2);
         order1.setStatus(OrderStatus.PENDING);
         orderRepository.save(order1);
 
@@ -105,8 +105,8 @@ public class DataInitializationService {
 
         // Initialize Reviews
         Review review1 = new Review();
-        review1.setBuyer(buyer1); // Assuming buyer1 is already initialized
-        review1.setProduct(product1); // Assuming product1 is already initialized
+        review1.setBuyer(buyer1);
+        review1.setProduct(product1);
         review1.setContent("Great product! Highly recommended.");
         review1.setRating(5);
         reviewRepository.save(review1);
