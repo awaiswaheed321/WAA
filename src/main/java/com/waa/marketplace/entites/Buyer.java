@@ -1,19 +1,26 @@
 package com.waa.marketplace.entites;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Buyer extends User {
+@Table(name = "buyers")
+public class Buyer {
+    @Id
+    private Long id;
+
+    @MapsId
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id")
+    private User user;
 
     private String shippingAddress;
     private String billingAddress;

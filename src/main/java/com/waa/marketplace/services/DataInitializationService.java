@@ -2,6 +2,7 @@ package com.waa.marketplace.services;
 
 import com.waa.marketplace.entites.*;
 import com.waa.marketplace.enums.OrderStatus;
+import com.waa.marketplace.enums.Role;
 import com.waa.marketplace.repositories.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,32 +36,66 @@ public class DataInitializationService {
     @PostConstruct
     public void initData() {
         // Initialize Admin
+        User adminUser = new User();
+        adminUser.setName("System Admin");
+        adminUser.setEmail("admin@example.com");
+        adminUser.setPassword("admin123");
+        adminUser.setRole(Role.ADMIN.name());
+
         Admin admin = new Admin();
-        admin.setName("System Admin");
-        admin.setEmail("admin@example.com");
-        admin.setPassword("admin123");
+        admin.setUser(adminUser);
         adminRepository.save(admin);
 
 
         // Initialize Buyers
+        User buyerUser1 = new User();
+        buyerUser1.setName("John Doe");
+        buyerUser1.setEmail("john.doe@example.com");
+        buyerUser1.setPassword("password123");
+        buyerUser1.setRole(Role.BUYER.name());
+
         Buyer buyer1 = new Buyer();
-        buyer1.setName("John Doe");
-        buyer1.setEmail("john.doe@example.com");
-        buyer1.setPassword("password123");
+        buyer1.setUser(buyerUser1);
+        buyer1.setShippingAddress("123 Main St");
+        buyer1.setBillingAddress("456 Elm St");
         buyerRepository.save(buyer1);
 
+        User buyerUser2 = new User();
+        buyerUser2.setName("Jane Smith");
+        buyerUser2.setEmail("jane.smith@example.com");
+        buyerUser2.setPassword("password123");
+        buyerUser2.setRole(Role.BUYER.name());
+
         Buyer buyer2 = new Buyer();
-        buyer2.setName("Jane Smith");
-        buyer2.setEmail("jane.smith@example.com");
-        buyer2.setPassword("password123");
+        buyer2.setUser(buyerUser2);
+        buyer2.setShippingAddress("789 Oak St");
+        buyer2.setBillingAddress("101 Pine Ave");
         buyerRepository.save(buyer2);
 
+
         // Initialize Sellers
+        User sellerUser1 = new User();
+        sellerUser1.setName("Alice Johnson");
+        sellerUser1.setEmail("alice.johnson@example.com");
+        sellerUser1.setPassword("securepass123");
+        sellerUser1.setRole(Role.SELLER.name());
+
         Seller seller1 = new Seller();
-        seller1.setName("ACME Electronics");
-        seller1.setEmail("acme@example.com");
-        seller1.setPassword("password123");
+        seller1.setUser(sellerUser1);
+        seller1.setApproved(true);
         sellerRepository.save(seller1);
+
+        User sellerUser2 = new User();
+        sellerUser2.setName("Bob Brown");
+        sellerUser2.setEmail("bob.brown@example.com");
+        sellerUser2.setPassword("securepass456");
+        sellerUser2.setRole(Role.SELLER.name());
+
+        Seller seller2 = new Seller();
+        seller2.setUser(sellerUser2);
+        seller2.setApproved(false);
+        sellerRepository.save(seller2);
+
 
         Category electronics = new Category();
         electronics.setName("Electronics");

@@ -1,19 +1,27 @@
 package com.waa.marketplace.entites;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Admin extends User {
+@Table(name = "admins")
+public class Admin {
+    @Id
+    private Long id;
+
+    @MapsId
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id")
+    private User user;
+
 
     @CreationTimestamp
     private LocalDateTime createdAt;

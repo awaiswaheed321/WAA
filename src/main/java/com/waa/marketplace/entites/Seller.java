@@ -1,20 +1,30 @@
 package com.waa.marketplace.entites;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Seller extends User {
+@Table(name = "sellers")
+public class Seller {
+    @Id
+    private Long id;
+
+    @MapsId
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id") // Foreign key referencing User table
+    private User user;
+
 
     @Column(nullable = false)
     private Boolean approved = false;
