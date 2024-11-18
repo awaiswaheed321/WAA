@@ -143,14 +143,14 @@ public class DataInitializationService {
         Review review1 = new Review();
         review1.setBuyer(buyer1);
         review1.setProduct(product1);
-        review1.setContent("Great product! Highly recommended.");
+        review1.setComment("Great product! Highly recommended.");
         review1.setRating(5);
         reviewRepository.save(review1);
 
         Review review2 = new Review();
         review2.setBuyer(buyer2);
         review2.setProduct(product2);
-        review2.setContent("Good quality, but a bit pricey.");
+        review2.setComment("Good quality, but a bit pricey.");
         review2.setRating(4);
         reviewRepository.save(review2);
 

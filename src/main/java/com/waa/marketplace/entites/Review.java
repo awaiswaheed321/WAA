@@ -27,7 +27,7 @@ public class Review {
     private Buyer buyer;
 
     @Column(nullable = false)
-    private String content;
+    private String comment;
 
     @Column(nullable = false)
     private Integer rating;

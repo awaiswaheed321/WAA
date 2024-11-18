@@ -22,7 +22,7 @@ public class Seller {
 
     @MapsId
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id") // Foreign key referencing User table
+    @JoinColumn(name = "id")
     private User user;
 
 

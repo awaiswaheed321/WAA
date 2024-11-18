@@ -1,5 +1,6 @@
 package com.waa.marketplace.security.config;
 
+import com.waa.marketplace.enums.Role;
 import com.waa.marketplace.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +40,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
 //                        .requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
-//                        .requestMatchers("api/v1/admin/**").hasAuthority(Roles.ADMIN.name())
+                        .requestMatchers("api/v1/admin/**").hasAuthority(Role.ADMIN.name())
 //                        .requestMatchers("/api/v1/user/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
 //                        .requestMatchers("/api/v1/post/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
 //                        .requestMatchers("/api/v1/comment/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
