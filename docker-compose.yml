@@ -8,6 +8,7 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
+      - ./init-scripts:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     restart: unless-stopped
@@ -23,6 +24,7 @@ services:
     ports:
       - "5050:80"
     restart: unless-stopped
+
 volumes:
   postgres:
   pgadmin:
