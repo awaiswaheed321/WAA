@@ -1,7 +1,7 @@
 package com.waa.marketplace.services.impl;
 
-import com.waa.marketplace.dtos.ReviewDto;
-import com.waa.marketplace.dtos.SellerDto;
+import com.waa.marketplace.dtos.responses.ReviewResponseDto;
+import com.waa.marketplace.dtos.responses.SellerResponseDto;
 import com.waa.marketplace.entites.Review;
 import com.waa.marketplace.entites.Seller;
 import com.waa.marketplace.repositories.ReviewRepository;
@@ -26,10 +26,10 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<SellerDto> getPendingSellers() {
+    public List<SellerResponseDto> getPendingSellers() {
         return sellerRepository.findByApprovedFalse()
                 .stream()
-                .map(seller -> new SellerDto(seller.getId(), seller.getUser().getName(), seller.getUser().getEmail()))
+                .map(seller -> new SellerResponseDto(seller.getId(), seller.getUser().getName(), seller.getUser().getEmail()))
                 .collect(Collectors.toList());
     }
 
@@ -47,10 +47,10 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<ReviewDto> getReviews(Long productId, Integer rating, String buyerEmail) {
+    public List<ReviewResponseDto> getReviews(Long productId, Integer rating, String buyerEmail) {
         return reviewRepository.findReviewsWithFilters(productId, rating, buyerEmail)
                 .stream()
-                .map(review -> new ReviewDto(review.getId(), review.getProduct().getName(), review.getRating(), review.getComment()))
+                .map(review -> new ReviewResponseDto(review.getId(), review.getProduct().getName(), review.getRating(), review.getComment()))
                 .collect(Collectors.toList());
     }
 

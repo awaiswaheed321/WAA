@@ -1,7 +1,7 @@
 package com.waa.marketplace.controllers;
 
-import com.waa.marketplace.dtos.ReviewDto;
-import com.waa.marketplace.dtos.SellerDto;
+import com.waa.marketplace.dtos.responses.ReviewResponseDto;
+import com.waa.marketplace.dtos.responses.SellerResponseDto;
 import com.waa.marketplace.services.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,8 +29,8 @@ public class AdminController {
      */
     @Operation(summary = "Get all pending sellers", description = "Fetches a list of sellers awaiting approval.")
     @GetMapping("/pending-sellers")
-    public ResponseEntity<List<SellerDto>> getAllPendingSellers() {
-        List<SellerDto> pendingSellers = adminService.getPendingSellers();
+    public ResponseEntity<List<SellerResponseDto>> getAllPendingSellers() {
+        List<SellerResponseDto> pendingSellers = adminService.getPendingSellers();
         return ResponseEntity.ok(pendingSellers);
     }
 
@@ -82,7 +82,7 @@ public class AdminController {
             description = "Fetches all reviews, with optional filters for product ID, rating, and buyer email."
     )
     @GetMapping("/review")
-    public ResponseEntity<List<ReviewDto>> getAllReviews(
+    public ResponseEntity<List<ReviewResponseDto>> getAllReviews(
             @Parameter(description = "Filter by product ID", example = "10")
             @RequestParam(required = false) Long productId,
             @Parameter(description = "Filter by rating", example = "5")
@@ -90,7 +90,7 @@ public class AdminController {
             @Parameter(description = "Filter by buyer email", example = "buyer@example.com")
             @RequestParam(required = false) String buyerEmail
     ) {
-        List<ReviewDto> reviews = adminService.getReviews(productId, rating, buyerEmail);
+        List<ReviewResponseDto> reviews = adminService.getReviews(productId, rating, buyerEmail);
         return ResponseEntity.ok(reviews);
     }
 

@@ -18,12 +18,22 @@ public class GlobalExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorDto> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
+        ErrorDto errorResponse = new ErrorDto(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorDto> handleIllegalStateException(IllegalStateException ex, WebRequest request) {
         LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
         ErrorDto errorResponse = new ErrorDto(
                 HttpStatus.BAD_REQUEST.value(),
-                "Invalid state: " + ex.getMessage() // Include the specific error message for better debugging
+                "Invalid state: " + ex.getMessage()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }

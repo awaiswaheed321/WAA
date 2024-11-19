@@ -1,9 +1,7 @@
 package com.waa.marketplace.services.impl;
 
-import com.waa.marketplace.dtos.OrderDto;
-import com.waa.marketplace.dtos.ReviewDto;
-import com.waa.marketplace.dtos.SellerDto;
 import com.waa.marketplace.dtos.requests.ProductRequestDto;
+import com.waa.marketplace.dtos.responses.OrderResponseDto;
 import com.waa.marketplace.dtos.responses.ProductDetailsDto;
 import com.waa.marketplace.dtos.responses.ProductResponseDto;
 import com.waa.marketplace.entites.Category;
@@ -16,8 +14,13 @@ import com.waa.marketplace.repositories.OrderRepository;
 import com.waa.marketplace.repositories.ProductRepository;
 import com.waa.marketplace.repositories.SellerRepository;
 import com.waa.marketplace.services.SellerService;
+import com.waa.marketplace.specifications.ProductSpecification;
+import com.waa.marketplace.utils.ProductMapper;
 import com.waa.marketplace.utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,9 +74,19 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public List<ProductResponseDto> getSellerProducts() {
+    public Page<ProductResponseDto> getSellerProducts(String name,
+                                                      Double priceMin,
+                                                      Double priceMax,
+                                                      Long categoryId,
+                                                      String description,
+                                                      Boolean active,
+                                                      Integer stockAvailable,
+                                                      Pageable pageable) {
         Seller seller = getLoggedInSeller();
-        return productRepository.findBySellerId(seller.getId()).stream()
+        Specification<Product> spec = ProductSpecification.filter(
+                name, priceMin, priceMax, categoryId, seller.getId(), description, true, stockAvailable);
+
+        return productRepository.findAll(spec, pageable)
                 .map(product -> new ProductResponseDto(
                         product.getId(),
                         product.getName(),
@@ -81,8 +94,7 @@ public class SellerServiceImpl implements SellerService {
                         product.getPrice(),
                         product.getStock(),
                         product.getCategory().getId()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
 
     @Override
@@ -91,29 +103,7 @@ public class SellerServiceImpl implements SellerService {
         Product product = productRepository.findByIdAndSellerId(id, sellerId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not " +
                         "found"));
-
-        return ProductDetailsDto.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .price(product.getPrice())
-                .stock(product.getStock())
-                .categoryId(product.getCategory().getId())
-                .seller(new SellerDto(
-                        product.getSeller().getId(),
-                        product.getSeller().getUser().getName(),
-                        product.getSeller().getUser().getEmail()
-                ))
-                .reviews(product.getReviews().stream()
-                        .map(review -> new ReviewDto(
-                                review.getId(),
-                                product.getName(),
-                                review.getRating(),
-                                review.getComment()
-                        ))
-                        .toList()
-                )
-                .build();
+        return ProductMapper.mapToProductDetailsDto(product);
     }
 
     @Override
@@ -143,6 +133,10 @@ public class SellerServiceImpl implements SellerService {
         Product product =
                 productRepository.findByIdAndSellerId(id, sellerId).orElseThrow(() -> new EntityNotFoundException(
                         "Product not found"));
+        List<Order> orders = orderRepository.findByProductId(id);
+        if (!orders.isEmpty()) {
+            throw new IllegalStateException("Product has orders associated with it");
+        }
         productRepository.delete(product);
     }
 
@@ -157,13 +151,15 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public List<OrderDto> getOrders() {
+    public List<OrderResponseDto> getOrders() {
         Seller seller = getLoggedInSeller();
 
         return orderRepository.findByProductSellerId(seller.getId()).stream()
-                .map(order -> new OrderDto(
+                .map(order -> new OrderResponseDto(
                         order.getId(),
-                        order.getProduct().getName(),
+                        new ProductResponseDto(order.getProduct().getId(), order.getProduct().getName(),
+                                order.getProduct().getDescription(), order.getProduct().getPrice(),
+                                order.getProduct().getStock(), order.getProduct().getCategory().getId()),
                         order.getQuantity(),
                         order.getStatus().name(),
                         order.getTotalPrice()
@@ -174,10 +170,53 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public void updateOrderStatus(Long id, String status) {
         Long sellerId = getLoggedInSeller().getId();
-        Order order = orderRepository.findByIdAndProductSellerId(id,
-                sellerId).orElseThrow(() -> new EntityNotFoundException(
-                "Order not found"));
-        order.setStatus(OrderStatus.valueOf(status));
+        Order order = orderRepository.findByIdAndProductSellerId(id, sellerId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        OrderStatus currentStatus = order.getStatus();
+        OrderStatus newStatus;
+
+        try {
+            newStatus = OrderStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid order status: " + status);
+        }
+
+        switch (currentStatus) {
+            case PENDING:
+                if (newStatus == OrderStatus.SHIPPED) {
+                    Product product = order.getProduct();
+                    int orderQuantity = order.getQuantity();
+
+                    if (product.getStock() < orderQuantity) {
+                        throw new IllegalStateException("Insufficient stock to ship the order.");
+                    }
+
+                    product.setStock(product.getStock() - orderQuantity);
+                    productRepository.save(product);
+                } else if (newStatus != OrderStatus.CANCELLED) {
+                    throw new IllegalStateException("Order can only be CANCELLED or SHIPPED when PENDING.");
+                }
+                break;
+            case CANCELLED:
+                throw new IllegalStateException("Order is CANCELLED and its status cannot be changed.");
+            case SHIPPED:
+                if (newStatus != OrderStatus.ON_THE_WAY) {
+                    throw new IllegalStateException("Order can only be changed to ON_THE_WAY when SHIPPED.");
+                }
+                break;
+            case ON_THE_WAY:
+                if (newStatus != OrderStatus.DELIVERED) {
+                    throw new IllegalStateException("Order can only be changed to DELIVERED when ON_THE_WAY.");
+                }
+                break;
+            case DELIVERED:
+                throw new IllegalStateException("Order is DELIVERED and its status cannot be changed.");
+            default:
+                throw new IllegalStateException("Unexpected order status: " + currentStatus);
+        }
+
+        order.setStatus(newStatus);
         orderRepository.save(order);
     }
 

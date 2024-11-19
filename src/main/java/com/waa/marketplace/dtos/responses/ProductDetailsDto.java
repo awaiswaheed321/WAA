@@ -1,7 +1,5 @@
 package com.waa.marketplace.dtos.responses;
 
-import com.waa.marketplace.dtos.ReviewDto;
-import com.waa.marketplace.dtos.SellerDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -40,7 +38,7 @@ public class ProductDetailsDto {
     @Schema(description = "Category ID of the product", example = "1")
     private long categoryId;
     @Schema(description = "Seller Info")
-    SellerDto seller;
+    SellerResponseDto seller;
     @Schema(description = "List of reviews")
-    List<ReviewDto> reviews;
+    List<ReviewResponseDto> reviews;
 }

@@ -1,4 +1,4 @@
-package com.waa.marketplace.dtos;
+package com.waa.marketplace.dtos.responses;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO for a review, including details of the product, rating, and comment.")
-public class ReviewDto {
+public class ReviewResponseDto {
 
     @Schema(description = "Unique identifier for the review", example = "123")
     private Long id;

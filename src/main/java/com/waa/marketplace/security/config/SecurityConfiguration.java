@@ -4,7 +4,6 @@ import com.waa.marketplace.enums.Role;
 import com.waa.marketplace.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -38,12 +37,13 @@ public class SecurityConfiguration {
         http.cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("api/v1/admin/**").hasAuthority(Role.ADMIN.name())
-                        .requestMatchers("/api/v1/seller/**").hasAnyAuthority(Role.SELLER.name())
-//                        .requestMatchers("/api/v1/post/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/signup/**").permitAll()
+                                .requestMatchers("api/v1/admin/**").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers("/api/v1/seller/**").hasAnyAuthority(Role.SELLER.name())
+                                .requestMatchers("/api/v1/product/**").hasAnyAuthority(Role.BUYER.name())
 //                        .requestMatchers("/api/v1/comment/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
-                        .anyRequest().authenticated()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
