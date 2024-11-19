@@ -20,10 +20,4 @@ public class BuyerResponseDto {
 
     @Schema(description = "Email address of the buyer", example = "john.doe@example.com")
     private String email;
-
-    @Schema(description = "Shipping address of the buyer", example = "123 Main St, Springfield, IL 62701")
-    private String shippingAddress;
-
-    @Schema(description = "Billing address of the buyer", example = "123 Main St, Springfield, IL 62701")
-    private String billingAddress;
 }

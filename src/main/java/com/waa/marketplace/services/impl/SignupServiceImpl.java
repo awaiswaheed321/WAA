@@ -1,9 +1,7 @@
 package com.waa.marketplace.services.impl;
 
-import com.waa.marketplace.dtos.requests.BuyerSignupDto;
-import com.waa.marketplace.dtos.requests.SellerSignupDto;
-import com.waa.marketplace.dtos.responses.BuyerResponseDto;
-import com.waa.marketplace.dtos.responses.SellerResponseDto;
+import com.waa.marketplace.dtos.requests.SignupRequestDto;
+import com.waa.marketplace.dtos.responses.SignupResponseDto;
 import com.waa.marketplace.entites.Buyer;
 import com.waa.marketplace.entites.Seller;
 import com.waa.marketplace.entites.User;
@@ -33,30 +31,21 @@ public class SignupServiceImpl implements SignupService {
     }
 
     @Override
-    public SellerResponseDto sellerSignup(SellerSignupDto sellerSignupDto) {
-        User user = generateUser(sellerSignupDto.getEmail(), sellerSignupDto.getName(), sellerSignupDto.getPassword()
-                , Role.SELLER.name());
-        Seller seller = Seller.builder().user(user).approved(false).build();
+    public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
+        User user = generateUser(signupRequestDto.getEmail(), signupRequestDto.getName(), signupRequestDto.getPassword(),
+                signupRequestDto.getRole());
 
-        Seller savedSeller = sellerRepository.save(seller);
-        return SellerResponseDto.builder()
-                .id(savedSeller.getId())
-                .name(savedSeller.getUser().getName())
-                .email(savedSeller.getUser().getEmail())
-                .build();
-    }
-
-    @Override
-    public BuyerResponseDto buyerSignup(BuyerSignupDto buyerSignupDto) {
-        User user = generateUser(buyerSignupDto.getEmail(), buyerSignupDto.getName(), buyerSignupDto.getPassword(),
-                Role.BUYER.name());
-        Buyer buyer = Buyer.builder().user(user).shippingAddress(buyerSignupDto.getShippingAddress())
-                .billingAddress(buyerSignupDto.getBillingAddress()).build();
-
-        Buyer savedBuyer = buyerRepository.save(buyer);
-        return BuyerResponseDto.builder().id(savedBuyer.getId()).email(savedBuyer.getUser().getEmail())
-                .name(savedBuyer.getUser().getName()).billingAddress(savedBuyer.getBillingAddress())
-                .shippingAddress(savedBuyer.getShippingAddress()).build();
+        if(signupRequestDto.getRole().equals(Role.SELLER.name())) {
+            Seller seller = Seller.builder().user(user).approved(false).build();
+            sellerRepository.save(seller);
+            return SignupResponseDto.builder().id(seller.getId()).email(seller.getUser().getEmail())
+                    .name(seller.getUser().getName()).build();
+        } else {
+            Buyer buyer = Buyer.builder().user(user).build();
+            buyerRepository.save(buyer);
+            return SignupResponseDto.builder().id(buyer.getId()).email(buyer.getUser().getEmail())
+                    .name(buyer.getUser().getName()).build();
+        }
     }
 
     private User generateUser(String email, String name, String password, String role) {

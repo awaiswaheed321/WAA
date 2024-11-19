@@ -1,6 +1,5 @@
 package com.waa.marketplace.entites;
 
-import com.waa.marketplace.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,38 +11,37 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "orders")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Order {
+public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String street;
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String state;
+
+    @Column(nullable = false)
+    private String zipCode;
+
+    @Column(nullable = false)
+    private String country;
+
+    @Column(nullable = false)
+    private String type;
+
     @ManyToOne
+    @JoinColumn(name = "buyer_id", nullable = false)
     private Buyer buyer;
-
-    @ManyToOne
-    private Product product;
-
-    @Column(nullable = false)
-    private Integer quantity;
-
-    @Column(nullable = false)
-    private Double totalPrice;
-
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
-
-    @OneToOne
-    @JoinColumn(name = "shipping_address_id", referencedColumnName = "id", nullable = false)
-    private Address shippingAddress;
-
-    @OneToOne
-    @JoinColumn(name = "billing_address_id", referencedColumnName = "id", nullable = false)
-    private Address billingAddress;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

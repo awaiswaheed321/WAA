@@ -1,13 +1,21 @@
 package com.waa.marketplace.controllers;
 
 import com.waa.marketplace.dtos.requests.LoginRequestDto;
-import com.waa.marketplace.dtos.responses.LoginResponseDto;
 import com.waa.marketplace.dtos.requests.RefreshTokenRequestDto;
+import com.waa.marketplace.dtos.requests.SignupRequestDto;
+import com.waa.marketplace.dtos.responses.LoginResponseDto;
+import com.waa.marketplace.dtos.responses.SignupResponseDto;
 import com.waa.marketplace.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -61,5 +69,38 @@ public class AuthenticationController {
     ) {
         LoginResponseDto refreshTokenRes = authenticationService.refreshToken(refreshTokenRequest);
         return ResponseEntity.ok().body(refreshTokenRes);
+    }
+
+    /**
+     * Signup API
+     * <p>
+     * This endpoint allows users to register as a Buyer or Seller in the system.
+     * The role is determined based on the provided data in the signup request.
+     *
+     * @param signupRequestDto Contains the details required to create a new user account,
+     *                         such as email, name, password, and role (BUYER or SELLER).
+     * @return A ResponseEntity containing the details of the created user, including their
+     * ID, name, and email.
+     */
+    @Operation(
+            summary = "User Signup",
+            description = "Registers a new user in the system as either a Buyer or Seller. The role is defined in the" +
+                    " request."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully registered",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SignupResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data or role",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PostMapping("/signup")
+    public ResponseEntity<SignupResponseDto> signup(
+            @RequestBody @Valid @Schema(description = "Signup details including email, name, password, and role")
+            SignupRequestDto signupRequestDto
+    ) {
+        SignupResponseDto signupResponseDto = authenticationService.signup(signupRequestDto);
+        return ResponseEntity.ok(signupResponseDto);
     }
 }

@@ -1,10 +1,14 @@
 package com.waa.marketplace.services.impl;
 
 import com.waa.marketplace.dtos.requests.LoginRequestDto;
+import com.waa.marketplace.dtos.requests.SignupRequestDto;
 import com.waa.marketplace.dtos.responses.LoginResponseDto;
 import com.waa.marketplace.dtos.requests.RefreshTokenRequestDto;
+import com.waa.marketplace.dtos.responses.SignupResponseDto;
+import com.waa.marketplace.entites.User;
 import com.waa.marketplace.security.jwt.JwtHelper;
 import com.waa.marketplace.services.AuthenticationService;
+import com.waa.marketplace.services.SignupService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -13,10 +17,12 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtHelper jwtHelper;
+    private final SignupService signupService;
 
-    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, JwtHelper jwtHelper) {
+    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, JwtHelper jwtHelper, SignupService signupService) {
         this.authenticationManager = authenticationManager;
         this.jwtHelper = jwtHelper;
+        this.signupService = signupService;
     }
 
     @Override
@@ -38,5 +44,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return new LoginResponseDto(accessToken, refreshTokenRequest.getRefreshToken());
         }
         return new LoginResponseDto();
+    }
+
+    @Override
+    public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
+        return signupService.signup(signupRequestDto);
     }
 }

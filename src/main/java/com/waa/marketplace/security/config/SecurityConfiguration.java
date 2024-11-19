@@ -38,10 +38,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/signup/**").permitAll()
                                 .requestMatchers("api/v1/admin/**").hasAuthority(Role.ADMIN.name())
                                 .requestMatchers("/api/v1/seller/**").hasAnyAuthority(Role.SELLER.name())
                                 .requestMatchers("/api/v1/product/**").hasAnyAuthority(Role.BUYER.name())
+                                .requestMatchers("/api/v1/addresses/**").hasAnyAuthority(Role.BUYER.name())
 //                        .requestMatchers("/api/v1/comment/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
                                 .anyRequest().authenticated()
                 )

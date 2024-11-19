@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -22,8 +24,8 @@ public class Buyer {
     @JoinColumn(name = "id")
     private User user;
 
-    private String shippingAddress;
-    private String billingAddress;
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
