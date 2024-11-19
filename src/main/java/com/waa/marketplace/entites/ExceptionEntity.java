@@ -26,6 +26,7 @@ public class ExceptionEntity {
 
     private String principle;
     private String operation;
+    @Column(length = 1000)
     private String message;
 
     @CreationTimestamp

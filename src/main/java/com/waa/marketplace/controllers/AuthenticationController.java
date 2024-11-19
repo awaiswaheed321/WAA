@@ -1,8 +1,8 @@
 package com.waa.marketplace.controllers;
 
-import com.waa.marketplace.dtos.LoginRequestDto;
-import com.waa.marketplace.dtos.LoginResponseDto;
-import com.waa.marketplace.dtos.RefreshTokenRequestDto;
+import com.waa.marketplace.dtos.requests.LoginRequestDto;
+import com.waa.marketplace.dtos.responses.LoginResponseDto;
+import com.waa.marketplace.dtos.requests.RefreshTokenRequestDto;
 import com.waa.marketplace.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

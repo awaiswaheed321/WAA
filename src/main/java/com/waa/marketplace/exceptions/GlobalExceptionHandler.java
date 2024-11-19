@@ -1,6 +1,6 @@
 package com.waa.marketplace.exceptions;
 
-import com.waa.marketplace.dtos.ErrorDto;
+import com.waa.marketplace.dtos.responses.ErrorDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,16 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class GlobalExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorDto> handleIllegalStateException(IllegalStateException ex, WebRequest request) {
+        LOGGER.error(GlobalExceptionHandler.class.getName(), ex.getMessage(), ex);
+        ErrorDto errorResponse = new ErrorDto(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid state: " + ex.getMessage() // Include the specific error message for better debugging
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorDto> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {

@@ -21,7 +21,11 @@ public class ExceptionEntityServiceImpl implements ExceptionsEntityService {
         exceptionEntity.setOperation(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         exceptionEntity.setExceptionType(exception.getClass().getName());
         exceptionEntity.setPrinciple(SecurityUtils.getUsername());
-        exceptionEntity.setMessage(exception.getMessage());
+        String exceptionMessage = exception.getMessage();
+        if (exceptionMessage != null && exceptionMessage.length() > 1000) {
+            exceptionMessage = exceptionMessage.substring(0, 1000);
+        }
+        exceptionEntity.setMessage(exceptionMessage);
         exceptionEntityRepository.save(exceptionEntity);
     }
 }

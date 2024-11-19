@@ -1,5 +1,8 @@
 package com.waa.marketplace.entites;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,6 +29,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonBackReference
     private Category category;
 
     @Column(nullable = false)
@@ -36,15 +41,22 @@ public class Product {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Seller seller;
 
     @Column(nullable = false)
     private Boolean active = true;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Review> reviews;
+
+    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 }

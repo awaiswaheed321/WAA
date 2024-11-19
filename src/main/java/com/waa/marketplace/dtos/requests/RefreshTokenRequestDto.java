@@ -1,4 +1,4 @@
-package com.waa.marketplace.dtos;
+package com.waa.marketplace.dtos.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

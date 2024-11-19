@@ -1,5 +1,7 @@
 package com.waa.marketplace.entites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,12 +29,15 @@ public class Category {
     @Column(length = 500)
     private String description;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
+    @JsonManagedReference
     private List<Product> products;
 
+    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 }
