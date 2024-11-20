@@ -37,8 +37,13 @@ public class ProductDetailsDto {
     @NotNull
     @Schema(description = "Category ID of the product", example = "1")
     private long categoryId;
+
     @Schema(description = "Seller Info")
     SellerResponseDto seller;
+
     @Schema(description = "List of reviews")
     List<ReviewResponseDto> reviews;
+
+    @Schema(description = "List of DTOs for image associated with a product.")
+    List<ImageResponseDto> images;
 }

@@ -3,6 +3,8 @@ package com.waa.marketplace.utils;
 import com.waa.marketplace.dtos.responses.*;
 import com.waa.marketplace.entites.*;
 
+import java.util.List;
+
 public class DtoMapper {
     public static ProductResponseDto mapToProductResponseDto(Product product) {
         return ProductResponseDto.builder()
@@ -12,7 +14,15 @@ public class DtoMapper {
                 .price(product.getPrice())
                 .stock(product.getStock())
                 .categoryId(product.getCategory().getId())
+                .images(product.getImages() != null && !product.getImages().isEmpty()
+                        ? product.getImages().stream().map(DtoMapper::mapToImageResponseDto).toList()
+                        : List.of())
                 .build();
+    }
+
+    public static ImageResponseDto mapToImageResponseDto(Image image) {
+        return ImageResponseDto.builder().id(image.getId()).name(image.getName())
+                .imageUrl(image.getImageUrl()).contentType(image.getContentType()).build();
     }
 
     public static AddressResponseDto mapToAddressResponseDto(Address address) {
@@ -62,6 +72,9 @@ public class DtoMapper {
                 .price(product.getPrice())
                 .stock(product.getStock())
                 .categoryId(product.getCategory().getId())
+                .images(product.getImages() != null && !product.getImages().isEmpty()
+                        ? product.getImages().stream().map(DtoMapper::mapToImageResponseDto).toList()
+                        : List.of())
                 .seller(new SellerResponseDto(
                         product.getSeller().getId(),
                         product.getSeller().getUser().getFirstName(),

@@ -52,6 +52,9 @@ public class Product {
     @JsonManagedReference
     private List<Review> reviews;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
+
     @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdAt;

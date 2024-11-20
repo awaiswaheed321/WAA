@@ -4,15 +4,13 @@ import com.waa.marketplace.dtos.requests.ProductRequestDto;
 import com.waa.marketplace.dtos.responses.OrderResponseDto;
 import com.waa.marketplace.dtos.responses.ProductDetailsDto;
 import com.waa.marketplace.dtos.responses.ProductResponseDto;
-import com.waa.marketplace.entites.Category;
-import com.waa.marketplace.entites.Order;
-import com.waa.marketplace.entites.Product;
-import com.waa.marketplace.entites.Seller;
+import com.waa.marketplace.entites.*;
 import com.waa.marketplace.enums.OrderStatus;
 import com.waa.marketplace.repositories.CategoryRepository;
 import com.waa.marketplace.repositories.OrderRepository;
 import com.waa.marketplace.repositories.ProductRepository;
 import com.waa.marketplace.repositories.SellerRepository;
+import com.waa.marketplace.services.S3Service;
 import com.waa.marketplace.services.SellerService;
 import com.waa.marketplace.specifications.ProductSpecification;
 import com.waa.marketplace.utils.DtoMapper;
@@ -33,15 +31,17 @@ public class SellerServiceImpl implements SellerService {
     private final OrderRepository orderRepository;
     private final SellerRepository sellerRepository;
     private final CategoryRepository categoryRepository;
+    private final S3Service s3Service;
 
     public SellerServiceImpl(ProductRepository productRepository,
                              OrderRepository orderRepository,
                              SellerRepository sellerRepository,
-                             CategoryRepository categoryRepository) {
+                             CategoryRepository categoryRepository, S3Service s3Service) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.sellerRepository = sellerRepository;
         this.categoryRepository = categoryRepository;
+        this.s3Service = s3Service;
     }
 
     @Override
@@ -61,7 +61,6 @@ public class SellerServiceImpl implements SellerService {
                 .stock(productDto.getStock())
                 .seller(seller)
                 .build();
-
         Product savedProduct = productRepository.save(product);
         return DtoMapper.mapToProductResponseDto(savedProduct);
     }
@@ -120,6 +119,10 @@ public class SellerServiceImpl implements SellerService {
         if (!orders.isEmpty()) {
             throw new IllegalStateException("Product has orders associated with it");
         }
+        List<String> imageNames = product.getImages().stream().map(Image::getName).toList();
+        if (!imageNames.isEmpty()) {
+            s3Service.deleteFile(imageNames);
+        }
         productRepository.delete(product);
     }
 
@@ -140,9 +143,7 @@ public class SellerServiceImpl implements SellerService {
         return orderRepository.findByProductSellerId(seller.getId()).stream()
                 .map(order -> new OrderResponseDto(
                         order.getId(),
-                        new ProductResponseDto(order.getProduct().getId(), order.getProduct().getName(),
-                                order.getProduct().getDescription(), order.getProduct().getPrice(),
-                                order.getProduct().getStock(), order.getProduct().getCategory().getId()),
+                        DtoMapper.mapToProductResponseDto(order.getProduct()),
                         order.getQuantity(),
                         order.getStatus().name(),
                         order.getTotalPrice()

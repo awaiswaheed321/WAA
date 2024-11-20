@@ -1,4 +1,4 @@
-package com.waa.marketplace.services;
+package com.waa.marketplace.testdata;
 
 import com.waa.marketplace.entites.*;
 import com.waa.marketplace.enums.OrderStatus;
@@ -10,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -103,11 +108,11 @@ public class DataInitializationService {
     }
 
     private void initializeProducts(Category category) {
-        Seller seller1 = sellerRepository.findAll().get(0); // Assuming Seller 1 is the first in the database
+        Seller seller1 = sellerRepository.findAll().get(0);
         productRepository.save(createProduct("Smartphone", "Latest model with advanced features", 699.99, 50, seller1
-                , category));
+                , category, "https://waa-project-bucket.s3.us-east-2.amazonaws.com/phone.webp", "phone.webp"));
         productRepository.save(createProduct("Laptop", "High-performance laptop for professionals", 1299.99, 30,
-                seller1, category));
+                seller1, category, "https://waa-project-bucket.s3.us-east-2.amazonaws.com/laptop.webp","laptop.webp"));
     }
 
     private void initializeOrders() {
@@ -174,7 +179,7 @@ public class DataInitializationService {
     }
 
     private Product createProduct(String name, String description, double price, int stock, Seller seller,
-                                  Category category) {
+                                  Category category, String imageUrl, String imageName) {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
@@ -182,6 +187,9 @@ public class DataInitializationService {
         product.setStock(stock);
         product.setSeller(seller);
         product.setCategory(category);
+        Image image = Image.builder().imageUrl(imageUrl).contentType("image/webp")
+                .name(imageName).product(product).build();
+        product.setImages(List.of(image));
         return product;
     }
 

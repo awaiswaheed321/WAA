@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,23 +19,21 @@ public class ProductResponseDto {
     @Schema(description = "Unique identifier of the product", example = "1")
     private Long id;
 
-    @NotNull
     @Schema(description = "Name of the product", example = "Wireless Mouse")
     private String name;
 
-    @NotNull
     @Schema(description = "Description of the product", example = "Ergonomic wireless mouse with long battery life")
     private String description;
 
-    @NotNull
     @Schema(description = "Price of the product", example = "29.99")
     private Double price;
 
-    @NotNull
     @Schema(description = "Stock quantity of the product", example = "100")
     private int stock;
 
-    @NotNull
     @Schema(description = "Category ID of the product", example = "1")
     private long categoryId;
+
+    @Schema(description = "List of DTOs for image associated with a product.")
+    List<ImageResponseDto> images;
 }
