@@ -9,29 +9,27 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "buyers")
-public class Buyer {
+public class CartItem {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @MapsId
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id")
-    private User user;
-
-    @OneToOne(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
     private Cart cart;
 
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
+    private Product product;
+
+    @Column(nullable = false)
+    private Integer quantity;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

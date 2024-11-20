@@ -147,6 +147,9 @@ public class DataInitializationService {
         User buyerUser = createUser(name, email, password, Role.BUYER);
         Buyer buyer = new Buyer();
         buyer.setUser(buyerUser);
+        Cart cart = new Cart();
+        cart.setBuyer(buyer);
+        buyer.setCart(cart);
         return buyer;
     }
 

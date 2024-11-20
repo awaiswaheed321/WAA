@@ -3,6 +3,7 @@ package com.waa.marketplace.services.impl;
 import com.waa.marketplace.dtos.requests.SignupRequestDto;
 import com.waa.marketplace.dtos.responses.SignupResponseDto;
 import com.waa.marketplace.entites.Buyer;
+import com.waa.marketplace.entites.Cart;
 import com.waa.marketplace.entites.Seller;
 import com.waa.marketplace.entites.User;
 import com.waa.marketplace.enums.Role;
@@ -42,6 +43,8 @@ public class SignupServiceImpl implements SignupService {
                     .name(seller.getUser().getName()).build();
         } else {
             Buyer buyer = Buyer.builder().user(user).build();
+            Cart cart = Cart.builder().buyer(buyer).build();
+            buyer.setCart(cart);
             buyerRepository.save(buyer);
             return SignupResponseDto.builder().id(buyer.getId()).email(buyer.getUser().getEmail())
                     .name(buyer.getUser().getName()).build();

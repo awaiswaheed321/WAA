@@ -17,21 +17,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "buyers")
-public class Buyer {
+public class Cart {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @MapsId
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id")
-    private User user;
+    @OneToOne
+    @JoinColumn(name = "buyer_id", referencedColumnName = "id", nullable = false)
+    private Buyer buyer;
 
-    @OneToOne(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Cart cart;
-
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses = new ArrayList<>();
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItem> items = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -39,3 +35,4 @@ public class Buyer {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 }
+
