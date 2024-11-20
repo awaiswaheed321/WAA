@@ -16,8 +16,11 @@ public class SellerResponseDto {
     @Schema(description = "Unique identifier for the seller", example = "1")
     private Long id;
 
-    @Schema(description = "Name of the seller", example = "John Doe")
-    private String name;
+    @Schema(description = "First Name of the seller", example = "John Doe")
+    private String firstName;
+
+    @Schema(description = "Last Name of the seller", example = "John Doe")
+    private String lastName;
 
     @Schema(description = "Email address of the seller", example = "john.doe@example.com")
     private String email;

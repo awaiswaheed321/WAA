@@ -60,7 +60,7 @@ public class DataInitializationService {
     }
 
     private void initializeAdmin() {
-        User adminUser = createUser("System Admin", "admin@example.com", "admin123", Role.ADMIN);
+        User adminUser = createUser("System", "Admin", "admin@example.com", "admin123", Role.ADMIN);
         Admin admin = new Admin();
         admin.setUser(adminUser);
         adminRepository.save(admin);
@@ -68,7 +68,7 @@ public class DataInitializationService {
 
     private void initializeBuyers() {
         // Buyer 1
-        Buyer buyer1 = createBuyer("John Doe", "john.doe@example.com", "john123");
+        Buyer buyer1 = createBuyer("John", "Doe", "john.doe@example.com", "john123");
         buyer1.getAddresses().add(createAddress(buyer1, "123 Main St", "Shipping City", "Shipping State", "12345",
                 "USA"));
         buyer1.getAddresses().add(createAddress(buyer1, "456 Elm St", "Billing City", "Billing State", "12345", "USA"
@@ -76,7 +76,7 @@ public class DataInitializationService {
         buyerRepository.save(buyer1);
 
         // Buyer 2
-        Buyer buyer2 = createBuyer("Jane Smith", "jane.smith@example.com", "jane123");
+        Buyer buyer2 = createBuyer("Jane", "Smith", "jane.smith@example.com", "jane123");
         buyer2.getAddresses().add(createAddress(buyer2, "789 Oak St", "Shipping City 2", "Shipping State 2", "09876",
                 "USA"));
         buyer2.getAddresses().add(createAddress(buyer2, "101 Pine Ave", "Billing City 2", "Billing State 2", "54321",
@@ -86,11 +86,11 @@ public class DataInitializationService {
 
     private void initializeSellers() {
         // Seller 1
-        Seller seller1 = createSeller("Alice Johnson", "alice.johnson@example.com", "alice123", true);
+        Seller seller1 = createSeller("Alice", "Johnson", "alice.johnson@example.com", "alice123", true);
         sellerRepository.save(seller1);
 
         // Seller 2
-        Seller seller2 = createSeller("Bob Brown", "bob.brown@example.com", "bob123", false);
+        Seller seller2 = createSeller("Bob", "Brown", "bob.brown@example.com", "bob123", false);
         sellerRepository.save(seller2);
     }
 
@@ -134,17 +134,18 @@ public class DataInitializationService {
         reviewRepository.save(createReview(buyer2, product2, "Good quality, but a bit pricey.", 4));
     }
 
-    private User createUser(String name, String email, String password, Role role) {
+    private User createUser(String firstName, String lastName, String email, String password, Role role) {
         User user = new User();
-        user.setName(name);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(role.name());
         return user;
     }
 
-    private Buyer createBuyer(String name, String email, String password) {
-        User buyerUser = createUser(name, email, password, Role.BUYER);
+    private Buyer createBuyer(String firstName, String lastName, String email, String password) {
+        User buyerUser = createUser(firstName, lastName, email, password, Role.BUYER);
         Buyer buyer = new Buyer();
         buyer.setUser(buyerUser);
         Cart cart = new Cart();
@@ -153,8 +154,8 @@ public class DataInitializationService {
         return buyer;
     }
 
-    private Seller createSeller(String name, String email, String password, boolean approved) {
-        User sellerUser = createUser(name, email, password, Role.SELLER);
+    private Seller createSeller(String firstName, String lastName, String email, String password, boolean approved) {
+        User sellerUser = createUser(firstName, lastName, email, password, Role.SELLER);
         Seller seller = new Seller();
         seller.setUser(sellerUser);
         seller.setApproved(approved);

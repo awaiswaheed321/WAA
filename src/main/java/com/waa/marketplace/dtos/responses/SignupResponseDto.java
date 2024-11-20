@@ -16,8 +16,11 @@ public class SignupResponseDto {
     @Schema(description = "Unique identifier for the user", example = "1")
     private Long id;
 
-    @Schema(description = "Name of the user", example = "John Doe")
-    private String name;
+    @Schema(description = "First Name of the user", example = "John")
+    private String firstName;
+
+    @Schema(description = "Last Name of the user", example = "John")
+    private String lastName;
 
     @Schema(description = "Email address of the user", example = "john.doe@example.com")
     private String email;

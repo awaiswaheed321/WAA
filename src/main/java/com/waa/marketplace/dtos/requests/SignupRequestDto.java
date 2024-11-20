@@ -14,8 +14,12 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Data transfer object for seller/buyer signup")
 public class SignupRequestDto {
     @NotNull
-    @Schema(description = "Name of the account holder", example = "John Doe")
-    private String name;
+    @Schema(description = "First Name of the account holder", example = "John")
+    private String firstName;
+
+    @NotNull
+    @Schema(description = "Last Name of the account holder", example = "Doe")
+    private String lastName;
 
     @NotNull
     @Schema(description = "Email address of the account holder", example = "john.doe@example.com")

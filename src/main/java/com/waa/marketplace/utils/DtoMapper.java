@@ -40,7 +40,7 @@ public class DtoMapper {
     public static SellerResponseDto mapToSellerResponseDto(Seller seller) {
         return SellerResponseDto.builder()
                 .id(seller.getId())
-                .name(seller.getUser().getName())
+                .firstName(seller.getUser().getFirstName()).lastName(seller.getUser().getLastName())
                 .email(seller.getUser().getEmail())
                 .build();
     }
@@ -64,7 +64,8 @@ public class DtoMapper {
                 .categoryId(product.getCategory().getId())
                 .seller(new SellerResponseDto(
                         product.getSeller().getId(),
-                        product.getSeller().getUser().getName(),
+                        product.getSeller().getUser().getFirstName(),
+                        product.getSeller().getUser().getLastName(),
                         product.getSeller().getUser().getEmail()
                 ))
                 .reviews(product.getReviews().stream()

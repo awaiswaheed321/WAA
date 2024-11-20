@@ -33,28 +33,29 @@ public class SignupServiceImpl implements SignupService {
 
     @Override
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
-        User user = generateUser(signupRequestDto.getEmail(), signupRequestDto.getName(), signupRequestDto.getPassword(),
+        User user = generateUser(signupRequestDto.getEmail(), signupRequestDto.getFirstName(),
+                signupRequestDto.getLastName(), signupRequestDto.getPassword(),
                 signupRequestDto.getRole());
 
-        if(signupRequestDto.getRole().equals(Role.SELLER.name())) {
+        if (signupRequestDto.getRole().equals(Role.SELLER.name())) {
             Seller seller = Seller.builder().user(user).approved(false).build();
             sellerRepository.save(seller);
             return SignupResponseDto.builder().id(seller.getId()).email(seller.getUser().getEmail())
-                    .name(seller.getUser().getName()).build();
+                    .firstName(seller.getUser().getFirstName()).lastName(seller.getUser().getLastName()).build();
         } else {
             Buyer buyer = Buyer.builder().user(user).build();
             Cart cart = Cart.builder().buyer(buyer).build();
             buyer.setCart(cart);
             buyerRepository.save(buyer);
             return SignupResponseDto.builder().id(buyer.getId()).email(buyer.getUser().getEmail())
-                    .name(buyer.getUser().getName()).build();
+                    .firstName(buyer.getUser().getFirstName()).lastName(buyer.getUser().getLastName()).build();
         }
     }
 
-    private User generateUser(String email, String name, String password, String role) {
+    private User generateUser(String email, String firstName, String lastName, String password, String role) {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email is already registered");
         }
-        return User.builder().email(email).name(name).password(passwordEncoder.encode(password)).role(role).build();
+        return User.builder().email(email).firstName(firstName).lastName(lastName).password(passwordEncoder.encode(password)).role(role).build();
     }
 }
