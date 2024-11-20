@@ -2,14 +2,12 @@ package com.waa.marketplace.services.impl;
 
 import com.waa.marketplace.dtos.requests.AddressRequestDto;
 import com.waa.marketplace.dtos.responses.AddressResponseDto;
-import com.waa.marketplace.dtos.responses.BuyerResponseDto;
 import com.waa.marketplace.entites.Address;
 import com.waa.marketplace.entites.Buyer;
 import com.waa.marketplace.repositories.AddressRepository;
 import com.waa.marketplace.repositories.BuyerRepository;
 import com.waa.marketplace.services.AddressService;
 import com.waa.marketplace.utils.SecurityUtils;
-import com.waa.marketplace.validations.ValidationService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +19,14 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
     private final BuyerRepository buyerRepository;
-    private final ValidationService validationService;
 
-    public AddressServiceImpl(AddressRepository addressRepository, BuyerRepository buyerRepository,
-                              ValidationService validationService) {
+    public AddressServiceImpl(AddressRepository addressRepository, BuyerRepository buyerRepository) {
         this.addressRepository = addressRepository;
         this.buyerRepository = buyerRepository;
-        this.validationService = validationService;
     }
 
     @Override
     public AddressResponseDto createAddress(AddressRequestDto addressRequestDto) {
-        validationService.validateAddressType(addressRequestDto.getType());
         Buyer buyer = getLoggedInBuyer();
 
         Address address = Address.builder()
@@ -41,25 +35,18 @@ public class AddressServiceImpl implements AddressService {
                 .state(addressRequestDto.getState())
                 .zipCode(addressRequestDto.getZipCode())
                 .country(addressRequestDto.getCountry())
-                .type(addressRequestDto.getType())
                 .buyer(buyer)
                 .build();
 
         Address savedAddress = addressRepository.save(address);
-        return mapToDto(savedAddress, buyer);
+        return mapToDto(savedAddress);
     }
 
     @Override
-    public List<AddressResponseDto> getAddresses(String type) {
+    public List<AddressResponseDto> getAddresses() {
         Buyer buyer = getLoggedInBuyer();
-        List<Address> addresses;
-        if (type == null) {
-            addresses = addressRepository.findByBuyerId(buyer.getId());
-        } else {
-            validationService.validateAddressType(type);
-            addresses = addressRepository.findByBuyerIdAndType(buyer.getId(), type);
-        }
-        return addresses.stream().map(a -> mapToDto(a, buyer)).collect(Collectors.toList());
+        List<Address> addresses = addressRepository.findByBuyerId(buyer.getId());
+        return addresses.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -73,10 +60,9 @@ public class AddressServiceImpl implements AddressService {
         address.setState(addressRequestDto.getState());
         address.setZipCode(addressRequestDto.getZipCode());
         address.setCountry(addressRequestDto.getCountry());
-        address.setType(addressRequestDto.getType());
 
         Address updatedAddress = addressRepository.save(address);
-        return mapToDto(updatedAddress, buyer);
+        return mapToDto(updatedAddress);
     }
 
     @Override
@@ -92,10 +78,10 @@ public class AddressServiceImpl implements AddressService {
         Buyer buyer = getLoggedInBuyer();
         Address address = addressRepository.findByIdAndBuyerId(id, buyer.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Address not found"));
-        return mapToDto(address, buyer);
+        return mapToDto(address);
     }
 
-    private AddressResponseDto mapToDto(Address address, Buyer buyer) {
+    private AddressResponseDto mapToDto(Address address) {
         return AddressResponseDto.builder()
                 .id(address.getId())
                 .street(address.getStreet())
@@ -103,8 +89,6 @@ public class AddressServiceImpl implements AddressService {
                 .state(address.getState())
                 .zipCode(address.getZipCode())
                 .country(address.getCountry())
-                .type(address.getType())
-                .buyer(new BuyerResponseDto(buyer.getId(), buyer.getUser().getName(), buyer.getUser().getEmail()))
                 .build();
     }
 

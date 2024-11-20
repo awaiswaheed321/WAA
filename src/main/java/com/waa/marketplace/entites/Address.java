@@ -36,9 +36,6 @@ public class Address {
     @Column(nullable = false)
     private String country;
 
-    @Column(nullable = false)
-    private String type;
-
     @ManyToOne
     @JoinColumn(name = "buyer_id", nullable = false)
     private Buyer buyer;

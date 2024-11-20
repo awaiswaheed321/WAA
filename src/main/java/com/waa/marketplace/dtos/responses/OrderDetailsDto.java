@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(description = "Data transfer object for Order")
-public class OrderResponseDto {
-
+@Schema(description = "Data transfer object for Order Details")
+public class OrderDetailsDto {
     @Schema(description = "Unique identifier of the order", example = "1")
     private Long id;
 
@@ -27,4 +26,10 @@ public class OrderResponseDto {
 
     @Schema(description = "Total amount for the order", example = "59.98")
     private Double totalPrice;
+
+    @Schema(description = "Shipping Address")
+    private AddressResponseDto shippingAddress;
+
+    @Schema(description = "Billing Address")
+    private AddressResponseDto billingAddress;
 }

@@ -1,13 +1,11 @@
 package com.waa.marketplace.services;
 
 import com.waa.marketplace.entites.*;
-import com.waa.marketplace.enums.AddressType;
 import com.waa.marketplace.enums.OrderStatus;
 import com.waa.marketplace.enums.Role;
 import com.waa.marketplace.repositories.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -72,17 +70,17 @@ public class DataInitializationService {
         // Buyer 1
         Buyer buyer1 = createBuyer("John Doe", "john.doe@example.com", "john123");
         buyer1.getAddresses().add(createAddress(buyer1, "123 Main St", "Shipping City", "Shipping State", "12345",
-                "USA", AddressType.SHIPPING));
+                "USA"));
         buyer1.getAddresses().add(createAddress(buyer1, "456 Elm St", "Billing City", "Billing State", "12345", "USA"
-                , AddressType.BILLING));
+        ));
         buyerRepository.save(buyer1);
 
         // Buyer 2
         Buyer buyer2 = createBuyer("Jane Smith", "jane.smith@example.com", "jane123");
         buyer2.getAddresses().add(createAddress(buyer2, "789 Oak St", "Shipping City 2", "Shipping State 2", "09876",
-                "USA", AddressType.SHIPPING));
+                "USA"));
         buyer2.getAddresses().add(createAddress(buyer2, "101 Pine Ave", "Billing City 2", "Billing State 2", "54321",
-                "USA", AddressType.BILLING));
+                "USA"));
         buyerRepository.save(buyer2);
     }
 
@@ -160,8 +158,7 @@ public class DataInitializationService {
         return seller;
     }
 
-    private Address createAddress(Buyer buyer, String street, String city, String state, String zip, String country,
-                                  AddressType type) {
+    private Address createAddress(Buyer buyer, String street, String city, String state, String zip, String country) {
         Address address = new Address();
         address.setStreet(street);
         address.setCity(city);
@@ -169,7 +166,6 @@ public class DataInitializationService {
         address.setZipCode(zip);
         address.setCountry(country);
         address.setBuyer(buyer);
-        address.setType(type.name());
         return address;
     }
 
@@ -193,8 +189,9 @@ public class DataInitializationService {
         order.setTotalPrice(product.getPrice() * quantity);
         order.setStatus(status);
 
-        Address billingAddress = addressRepository.findByBuyerIdAndType(buyer.getId(), AddressType.BILLING.name()).get(0);
-        Address shippingAddress = addressRepository.findByBuyerIdAndType(buyer.getId(), AddressType.SHIPPING.name()).get(0);
+        List<Address> addresses = addressRepository.findByBuyerId(buyer.getId());
+        Address billingAddress = addresses.get(0);
+        Address shippingAddress = addresses.get(1);
 
         if (billingAddress != null) {
             order.setBillingAddress(billingAddress);

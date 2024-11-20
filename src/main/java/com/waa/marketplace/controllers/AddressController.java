@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/addresses")
+@RequestMapping("/api/v1/buyer/addresses")
 public class AddressController {
     private final AddressService addressService;
 
@@ -32,8 +32,8 @@ public class AddressController {
 
     @Operation(summary = "Get all addresses for the logged-in user")
     @GetMapping
-    public ResponseEntity<List<AddressResponseDto>> getAddresses(@RequestParam(required = false) String type) {
-        List<AddressResponseDto> addresses = addressService.getAddresses(type);
+    public ResponseEntity<List<AddressResponseDto>> getAddresses() {
+        List<AddressResponseDto> addresses = addressService.getAddresses();
         return new ResponseEntity<>(addresses, HttpStatus.OK);
     }
 

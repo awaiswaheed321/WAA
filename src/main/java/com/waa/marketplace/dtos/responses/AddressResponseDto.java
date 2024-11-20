@@ -28,10 +28,4 @@ public class AddressResponseDto {
 
     @Schema(description = "Country name", example = "USA")
     private String country;
-
-    @Schema(description = "Type of address, e.g., 'billing' or 'shipping'", example = "billing")
-    private String type;
-
-    @Schema(description = "Buyer associated with the address")
-    private BuyerResponseDto buyer;
 }

@@ -37,11 +37,11 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "shipping_address_id", referencedColumnName = "id", nullable = false)
     private Address shippingAddress;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "billing_address_id", referencedColumnName = "id", nullable = false)
     private Address billingAddress;
 

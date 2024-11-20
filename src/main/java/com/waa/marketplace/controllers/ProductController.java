@@ -17,8 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/product")
-@Tag(name = "Admin APIs", description = "APIs for buyer to view products")
+@RequestMapping("/api/v1/buyer/product")
+@Tag(name = "Product APIs", description = "APIs for buyer to view products")
 public class ProductController {
     private final ProductService productService;
 

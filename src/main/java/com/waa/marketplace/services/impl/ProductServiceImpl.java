@@ -6,7 +6,7 @@ import com.waa.marketplace.entites.Product;
 import com.waa.marketplace.repositories.ProductRepository;
 import com.waa.marketplace.services.ProductService;
 import com.waa.marketplace.specifications.ProductSpecification;
-import com.waa.marketplace.utils.ProductMapper;
+import com.waa.marketplace.utils.DtoMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,14 +29,7 @@ public class ProductServiceImpl implements ProductService {
                 name, priceMin, priceMax, categoryId, sellerId, description, true, stockAvailable);
 
         return productRepository.findAll(spec, pageable)
-                .map(product -> new ProductResponseDto(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getPrice(),
-                        product.getStock(),
-                        product.getCategory().getId()
-                ));
+                .map(DtoMapper::mapToProductResponseDto);
     }
 
     @Override
@@ -44,6 +37,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not " +
                         "found"));
-        return ProductMapper.mapToProductDetailsDto(product);
+        return DtoMapper.mapToProductDetailsDto(product);
     }
 }

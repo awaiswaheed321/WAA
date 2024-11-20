@@ -15,7 +15,7 @@ import com.waa.marketplace.repositories.ProductRepository;
 import com.waa.marketplace.repositories.SellerRepository;
 import com.waa.marketplace.services.SellerService;
 import com.waa.marketplace.specifications.ProductSpecification;
-import com.waa.marketplace.utils.ProductMapper;
+import com.waa.marketplace.utils.DtoMapper;
 import com.waa.marketplace.utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -63,14 +63,7 @@ public class SellerServiceImpl implements SellerService {
                 .build();
 
         Product savedProduct = productRepository.save(product);
-        return new ProductResponseDto(
-                savedProduct.getId(),
-                savedProduct.getName(),
-                savedProduct.getDescription(),
-                savedProduct.getPrice(),
-                savedProduct.getStock(),
-                savedProduct.getCategory().getId()
-        );
+        return DtoMapper.mapToProductResponseDto(savedProduct);
     }
 
     @Override
@@ -87,14 +80,7 @@ public class SellerServiceImpl implements SellerService {
                 name, priceMin, priceMax, categoryId, seller.getId(), description, true, stockAvailable);
 
         return productRepository.findAll(spec, pageable)
-                .map(product -> new ProductResponseDto(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getPrice(),
-                        product.getStock(),
-                        product.getCategory().getId()
-                ));
+                .map(DtoMapper::mapToProductResponseDto);
     }
 
     @Override
@@ -103,7 +89,7 @@ public class SellerServiceImpl implements SellerService {
         Product product = productRepository.findByIdAndSellerId(id, sellerId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not " +
                         "found"));
-        return ProductMapper.mapToProductDetailsDto(product);
+        return DtoMapper.mapToProductDetailsDto(product);
     }
 
     @Override
@@ -121,10 +107,7 @@ public class SellerServiceImpl implements SellerService {
         product.setStock(productDto.getStock());
         product.setCategory(category);
         Product updatedProduct = productRepository.save(product);
-        return new ProductResponseDto(updatedProduct.getId(),
-                updatedProduct.getName(), updatedProduct.getDescription(),
-                updatedProduct.getPrice(), updatedProduct.getStock(),
-                updatedProduct.getCategory().getId());
+        return DtoMapper.mapToProductResponseDto(updatedProduct);
     }
 
     @Override

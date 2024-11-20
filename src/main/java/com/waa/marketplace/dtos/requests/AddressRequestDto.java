@@ -28,9 +28,5 @@ public class AddressRequestDto {
     @NotNull
     @Schema(description = "Country name", example = "USA")
     private String country;
-
-    @NotNull
-    @Schema(description = "Type of address, e.g., 'billing' or 'shipping'", example = "billing")
-    private String type;
 }
 
