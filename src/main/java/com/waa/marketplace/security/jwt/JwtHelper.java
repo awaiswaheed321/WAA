@@ -53,7 +53,7 @@ public class JwtHelper {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            if (!"access".equals(claims.get("type"))) {
+            if (!"refresh".equals(claims.get("type"))) {
                 throw new IllegalArgumentException("Invalid token type");
             }
             Date expiration = claims.getExpiration();

@@ -52,7 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return new LoginResponseDto(accessToken, refreshTokenRequest.getRefreshToken(),
                     DtoMapper.mapToUserResponseDto(user));
         }
-        return new LoginResponseDto();
+        throw new IllegalArgumentException("Refresh Token invalid");
     }
 
     @Override
