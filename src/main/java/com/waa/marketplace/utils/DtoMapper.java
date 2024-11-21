@@ -92,4 +92,10 @@ public class DtoMapper {
                 )
                 .build();
     }
+
+    public static UserResponseDto mapToUserResponseDto(User user) {
+        return UserResponseDto.builder()
+                .id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName()).email(user.getEmail())
+                .role(user.getRole()).build();
+    }
 }

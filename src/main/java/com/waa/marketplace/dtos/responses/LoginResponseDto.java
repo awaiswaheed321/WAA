@@ -16,4 +16,7 @@ public class LoginResponseDto {
 
     @Schema(description = "JWT refresh token to obtain a new access token when the current one expires.", example = "defg5678ijkl9012mnop34qrstu5678vwxyz")
     private String refreshToken;
+
+    @Schema(description = "User information", implementation = UserResponseDto.class)
+    private UserResponseDto user;
 }
