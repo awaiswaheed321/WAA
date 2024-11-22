@@ -70,19 +70,13 @@ public class AdminController {
      * Get all reviews.
      * Retrieves all reviews with optional filters for product ID, rating, or buyer email.
      *
-     * @param productId  Optional filter for the product ID.
-     * @param rating     Optional filter for the review rating.
-     * @param buyerEmail Optional filter for the buyer's email.
      * @return List of ReviewDto objects matching the filters.
      */
     @Operation(summary = "Get all reviews", description = "Fetches all reviews, with optional filters for product ID," +
             " rating, and buyer email.")
     @GetMapping("/review")
-    public ResponseEntity<List<ReviewResponseDto>> getAllReviews(@Parameter(description = "Filter by product ID",
-            example = "10") @RequestParam(required = false) Long productId, @Parameter(description = "Filter by " +
-            "rating", example = "5") @RequestParam(required = false) Integer rating, @Parameter(description = "Filter" +
-            " by buyer email", example = "buyer@example.com") @RequestParam(required = false) String buyerEmail) {
-        List<ReviewResponseDto> reviews = adminService.getReviews(productId, rating, buyerEmail);
+    public ResponseEntity<List<ReviewResponseDto>> getAllReviews() {
+        List<ReviewResponseDto> reviews = adminService.getReviews();
         return ResponseEntity.ok(reviews);
     }
 

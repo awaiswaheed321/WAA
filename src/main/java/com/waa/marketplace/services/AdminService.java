@@ -15,7 +15,7 @@ public interface AdminService {
 
     void rejectSeller(Long id);
 
-    List<ReviewResponseDto> getReviews(Long productId, Integer rating, String buyerEmail);
+    List<ReviewResponseDto> getReviews();
 
     void deleteReview(Long id);
 

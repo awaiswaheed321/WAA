@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                         .requestMatchers("api/v1/admin/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/v1/seller/**").hasAnyAuthority(Role.SELLER.name())
                         .requestMatchers("/api/v1/images/**").hasAnyAuthority(Role.SELLER.name())
-                        .requestMatchers("api/v1/category/**").hasAnyAuthority(Role.SELLER.name(), Role.ADMIN.name())
+                        .requestMatchers("api/v1/category/**").hasAnyAuthority(Role.SELLER.name(), Role.ADMIN.name(), Role.BUYER.name())
                         .requestMatchers("/api/v1/buyer/**")
                         .hasAnyAuthority(Role.BUYER.name())
                         .anyRequest().authenticated()

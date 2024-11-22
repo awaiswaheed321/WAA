@@ -58,8 +58,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<ReviewResponseDto> getReviews(Long productId, Integer rating, String buyerEmail) {
-        return reviewRepository.findReviewsWithFilters(productId, rating, buyerEmail)
+    public List<ReviewResponseDto> getReviews() {
+        return reviewRepository.findAll()
                 .stream()
                 .map(DtoMapper::mapToReviewResponseDto)
                 .collect(Collectors.toList());
