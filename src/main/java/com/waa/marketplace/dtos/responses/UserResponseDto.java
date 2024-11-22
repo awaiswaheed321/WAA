@@ -27,4 +27,7 @@ public class UserResponseDto {
 
     @Schema(description = "Role of the user in the system", example = "ADMIN")
     private String role;
+
+    @Schema(description = "In case of seller, Indicates whether the seller has been approved. Defaults to false for new sellers.")
+    private Boolean approved;
 }

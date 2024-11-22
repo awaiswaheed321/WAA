@@ -42,7 +42,7 @@ public class AuthenticationController {
             description = "Authenticates a user and returns a JWT token and refresh token upon successful login."
     )
     @PostMapping("/login")
-    public ResponseEntity<?> login(
+    public ResponseEntity<LoginResponseDto> login(
             @Parameter(description = "Login credentials (email and password)", required = true)
             @RequestBody LoginRequestDto loginRequest
     ) {
@@ -63,7 +63,7 @@ public class AuthenticationController {
             description = "Generates a new JWT token using a valid refresh token."
     )
     @PostMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(
+    public ResponseEntity<LoginResponseDto> refreshToken(
             @Parameter(description = "Request body containing the refresh token", required = true)
             @RequestBody RefreshTokenRequestDto refreshTokenRequest
     ) {

@@ -21,7 +21,7 @@ public class Seller {
     private Long id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
     private User user;
 

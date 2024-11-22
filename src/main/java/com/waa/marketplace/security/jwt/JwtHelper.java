@@ -46,30 +46,46 @@ public class JwtHelper {
                 .getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, String expectedType) {
         try {
             var claims = Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(Constants.JWT_SECRET.getBytes()))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            if (!"refresh".equals(claims.get("type"))) {
-                throw new IllegalArgumentException("Invalid token type");
+
+            // Validate token type
+            String tokenType = (String) claims.get("type");
+            if (!expectedType.equals(tokenType)) {
+                throw new IllegalArgumentException("Invalid token type: expected " + expectedType + ", found " + tokenType);
             }
+
+            // Validate expiration
             Date expiration = claims.getExpiration();
             if (expiration.before(new Date())) {
                 throw new ExpiredJwtException(null, claims, "Token has expired");
             }
+
+            // Validate email
             String email = claims.getSubject();
             if (email == null || email.isEmpty()) {
                 throw new IllegalArgumentException("Invalid token: no email found");
             }
+
             return true;
         } catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
                  IllegalArgumentException e) {
             System.out.println("Invalid JWT token: " + e.getMessage());
         }
         return false;
+    }
+
+    public boolean validateAccessToken(String token) {
+        return validateToken(token, "access");
+    }
+
+    public boolean validateRefreshToken(String token) {
+        return validateToken(token, "refresh");
     }
 
 
