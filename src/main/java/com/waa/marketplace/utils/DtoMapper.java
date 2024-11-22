@@ -13,7 +13,7 @@ public class DtoMapper {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .stock(product.getStock())
-                .categoryId(product.getCategory().getId())
+                .category(mapToCategoryResponseDto(product.getCategory()))
                 .images(product.getImages() != null && !product.getImages().isEmpty()
                         ? product.getImages().stream().map(DtoMapper::mapToImageResponseDto).toList()
                         : List.of())
@@ -71,7 +71,7 @@ public class DtoMapper {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .stock(product.getStock())
-                .categoryId(product.getCategory().getId())
+                .category(mapToCategoryResponseDto(product.getCategory()))
                 .images(product.getImages() != null && !product.getImages().isEmpty()
                         ? product.getImages().stream().map(DtoMapper::mapToImageResponseDto).toList()
                         : List.of())
@@ -97,5 +97,9 @@ public class DtoMapper {
         return UserResponseDto.builder()
                 .id(user.getId()).firstName(user.getFirstName()).lastName(user.getLastName()).email(user.getEmail())
                 .role(user.getRole()).build();
+    }
+
+    public static CategoryResponseDto mapToCategoryResponseDto(Category category) {
+        return CategoryResponseDto.builder().id(category.getId()).name(category.getName()).description(category.getDescription()).build();
     }
 }

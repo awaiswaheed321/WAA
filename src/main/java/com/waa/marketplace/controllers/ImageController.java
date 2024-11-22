@@ -1,6 +1,5 @@
 package com.waa.marketplace.controllers;
 
-import com.waa.marketplace.dtos.responses.ImageResponseDto;
 import com.waa.marketplace.services.ImageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +17,11 @@ public class ImageController {
     }
 
     @PostMapping("/upload/{productId}")
-    public ResponseEntity<ImageResponseDto> uploadImage(
+    public ResponseEntity<?> uploadImage(
             @RequestBody MultipartFile file,
             @PathVariable Long productId) throws IOException {
-        ImageResponseDto responseDto = imageService.uploadImage(file, productId);
-        return ResponseEntity.ok(responseDto);
+        imageService.uploadImage(file, productId);
+        return ResponseEntity.ok().build();
     }
 }
 

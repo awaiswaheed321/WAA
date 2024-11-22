@@ -1,7 +1,6 @@
 package com.waa.marketplace.dtos.responses;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,8 +30,8 @@ public class ProductResponseDto {
     @Schema(description = "Stock quantity of the product", example = "100")
     private int stock;
 
-    @Schema(description = "Category ID of the product", example = "1")
-    private long categoryId;
+    @Schema(description = "Category of the product")
+    private CategoryResponseDto category;
 
     @Schema(description = "List of DTOs for image associated with a product.")
     List<ImageResponseDto> images;

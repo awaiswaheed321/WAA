@@ -1,9 +1,7 @@
 package com.waa.marketplace.services.impl;
 
-import com.waa.marketplace.dtos.responses.ImageResponseDto;
 import com.waa.marketplace.entites.Image;
 import com.waa.marketplace.entites.Product;
-import com.waa.marketplace.repositories.ImageRepository;
 import com.waa.marketplace.repositories.ProductRepository;
 import com.waa.marketplace.services.ImageService;
 import com.waa.marketplace.services.S3Service;
@@ -18,18 +16,16 @@ import java.util.UUID;
 @Service
 public class ImageServiceImpl implements ImageService {
     private final S3Service s3Service;
-    private final ImageRepository imageRepository;
     private final ProductRepository productRepository;
 
     @Autowired
-    public ImageServiceImpl(S3Service s3Service, ImageRepository imageRepository, ProductRepository productRepository) {
+    public ImageServiceImpl(S3Service s3Service, ProductRepository productRepository) {
         this.s3Service = s3Service;
-        this.imageRepository = imageRepository;
         this.productRepository = productRepository;
     }
 
     @Override
-    public ImageResponseDto uploadImage(MultipartFile file, Long productId) throws IOException {
+    public void uploadImage(MultipartFile file, Long productId) throws IOException {
         Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException(
                 "Product not found"));
         if (file.isEmpty()) {
@@ -44,14 +40,8 @@ public class ImageServiceImpl implements ImageService {
         image.setContentType(file.getContentType());
         image.setProduct(product);
 
-        Image savedImage = imageRepository.save(image);
-
-        ImageResponseDto responseDto = new ImageResponseDto();
-        responseDto.setId(savedImage.getId());
-        responseDto.setName(savedImage.getName());
-        responseDto.setImageUrl(savedImage.getImageUrl());
-        responseDto.setContentType(savedImage.getContentType());
-        return responseDto;
+        product.getImages().add(image);
+        productRepository.save(product);
     }
 
     public static String generateUniqueFileName(String filename) {
