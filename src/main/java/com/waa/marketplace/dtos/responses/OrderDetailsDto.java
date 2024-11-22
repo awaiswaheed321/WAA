@@ -32,4 +32,7 @@ public class OrderDetailsDto {
 
     @Schema(description = "Billing Address")
     private AddressResponseDto billingAddress;
+
+    @Schema(description = "Review")
+    private ReviewResponseDto review;
 }

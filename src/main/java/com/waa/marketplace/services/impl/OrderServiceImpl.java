@@ -15,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.waa.marketplace.utils.DtoMapper.*;
 
@@ -72,8 +73,8 @@ public class OrderServiceImpl implements OrderService {
         Buyer buyer = getLoggedInBuyer();
         Order order = orderRepository.findByIdAndBuyerId(id, buyer.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-
-        return OrderDetailsDto.builder()
+        Optional<Review> review = reviewRepository.findByOrderId(id);
+        OrderDetailsDto res = OrderDetailsDto.builder()
                 .id(order.getId())
                 .quantity(order.getQuantity())
                 .status(order.getStatus().name())
@@ -82,6 +83,8 @@ public class OrderServiceImpl implements OrderService {
                 .billingAddress(mapToAddressResponseDto(order.getBillingAddress()))
                 .shippingAddress(mapToAddressResponseDto(order.getShippingAddress()))
                 .build();
+        review.ifPresent(value -> res.setReview(DtoMapper.mapToReviewResponseDto(value)));
+        return res;
     }
 
     @Override
