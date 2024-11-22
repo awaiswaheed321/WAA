@@ -34,6 +34,9 @@ public class Review {
     @Column(nullable = false)
     private Integer rating;
 
+    @Column(nullable = false)
+    private Long orderId;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

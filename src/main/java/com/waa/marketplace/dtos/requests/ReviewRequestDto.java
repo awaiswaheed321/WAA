@@ -21,5 +21,13 @@ public class ReviewRequestDto {
     @NotNull
     @Schema(description = "Rating of the product, from 1 to 5")
     private Integer rating;
+
+    @NotNull
+    @Schema(description = "The id of the order being reviewed")
+    private Long orderId;
+
+    @NotNull
+    @Schema(description = "The id of the product being reviewed")
+    private Long productId;
 }
 

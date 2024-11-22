@@ -1,8 +1,10 @@
 package com.waa.marketplace.controllers;
 
 import com.waa.marketplace.dtos.requests.OrderRequestDto;
+import com.waa.marketplace.dtos.requests.ReviewRequestDto;
 import com.waa.marketplace.dtos.responses.OrderDetailsDto;
 import com.waa.marketplace.dtos.responses.OrderResponseDto;
+import com.waa.marketplace.dtos.responses.ReviewResponseDto;
 import com.waa.marketplace.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -86,5 +88,11 @@ public class OrderController {
     public ResponseEntity<Void> cancelOrderById(@PathVariable Long id) {
         orderService.cancelOrder(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<ReviewResponseDto> reviewOrder(@RequestBody @Valid ReviewRequestDto reviewRequestDto) {
+        ReviewResponseDto res = orderService.reviewOrder(reviewRequestDto);
+        return ResponseEntity.ok(res);
     }
 }

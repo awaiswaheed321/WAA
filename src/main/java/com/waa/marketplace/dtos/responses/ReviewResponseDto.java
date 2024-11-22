@@ -24,4 +24,7 @@ public class ReviewResponseDto {
 
     @Schema(description = "Comment provided by the reviewer", example = "Excellent sound quality and comfortable design.")
     private String comment;
+
+    @Schema(description = "The id of the order being reviewed", example = "123")
+    private Long orderId;
 }

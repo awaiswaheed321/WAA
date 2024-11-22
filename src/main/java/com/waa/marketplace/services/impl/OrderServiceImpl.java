@@ -1,17 +1,13 @@
 package com.waa.marketplace.services.impl;
 
 import com.waa.marketplace.dtos.requests.OrderRequestDto;
+import com.waa.marketplace.dtos.requests.ReviewRequestDto;
 import com.waa.marketplace.dtos.responses.OrderDetailsDto;
 import com.waa.marketplace.dtos.responses.OrderResponseDto;
-import com.waa.marketplace.entites.Address;
-import com.waa.marketplace.entites.Buyer;
-import com.waa.marketplace.entites.Order;
-import com.waa.marketplace.entites.Product;
+import com.waa.marketplace.dtos.responses.ReviewResponseDto;
+import com.waa.marketplace.entites.*;
 import com.waa.marketplace.enums.OrderStatus;
-import com.waa.marketplace.repositories.AddressRepository;
-import com.waa.marketplace.repositories.BuyerRepository;
-import com.waa.marketplace.repositories.OrderRepository;
-import com.waa.marketplace.repositories.ProductRepository;
+import com.waa.marketplace.repositories.*;
 import com.waa.marketplace.services.OrderService;
 import com.waa.marketplace.utils.DtoMapper;
 import com.waa.marketplace.utils.SecurityUtils;
@@ -28,13 +24,15 @@ public class OrderServiceImpl implements OrderService {
     private final AddressRepository addressRepository;
     private final BuyerRepository buyerRepository;
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
 
     public OrderServiceImpl(OrderRepository orderRepository, AddressRepository addressRepository,
-                            BuyerRepository buyerRepository, ProductRepository productRepository) {
+                            BuyerRepository buyerRepository, ProductRepository productRepository, ReviewRepository reviewRepository) {
         this.orderRepository = orderRepository;
         this.addressRepository = addressRepository;
         this.buyerRepository = buyerRepository;
         this.productRepository = productRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @Override
@@ -95,6 +93,22 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalStateException("Order is not in PENDING status");
         }
         orderRepository.delete(order);
+    }
+
+    @Override
+    public ReviewResponseDto reviewOrder(ReviewRequestDto reviewRequestDto) {
+        Product product = productRepository.findById(reviewRequestDto.getProductId()).orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        Order order = orderRepository.findById(reviewRequestDto.getOrderId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        Review review = new Review();
+        review.setRating(reviewRequestDto.getRating());
+        review.setComment(reviewRequestDto.getComment());
+        review.setProduct(product);
+        review.setBuyer(getLoggedInBuyer());
+        review.setOrderId(reviewRequestDto.getOrderId());
+        Review savedReview = reviewRepository.save(review);
+        product.getReviews().add(savedReview);
+        productRepository.save(product);
+        return DtoMapper.mapToReviewResponseDto(savedReview) ;
     }
 
 

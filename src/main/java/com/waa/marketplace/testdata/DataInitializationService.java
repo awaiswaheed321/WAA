@@ -125,10 +125,10 @@ public class DataInitializationService {
 
         orderRepository.save(createOrder(buyer1, product1, 2, OrderStatus.PENDING));
         orderRepository.save(createOrder(buyer2, product1, 2, OrderStatus.PENDING));
-        orderRepository.save(createOrder(buyer2, product2, 1, OrderStatus.SHIPPED));
-        orderRepository.save(createOrder(buyer2, product1, 1, OrderStatus.SHIPPED));
         orderRepository.save(createOrder(buyer1, product1, 2, OrderStatus.PENDING));
         orderRepository.save(createOrder(buyer2, product1, 2, OrderStatus.PENDING));
+        orderRepository.save(createOrder(buyer1, product2, 1, OrderStatus.SHIPPED));
+        orderRepository.save(createOrder(buyer1, product1, 1, OrderStatus.SHIPPED));
         orderRepository.save(createOrder(buyer2, product2, 1, OrderStatus.SHIPPED));
         orderRepository.save(createOrder(buyer2, product1, 1, OrderStatus.SHIPPED));
     }
@@ -141,8 +141,8 @@ public class DataInitializationService {
         Product product1 = products.get(0);
         Product product2 = products.get(1);
 
-        reviewRepository.save(createReview(buyer1, product1, "Great product! Highly recommended.", 5));
-        reviewRepository.save(createReview(buyer2, product2, "Good quality, but a bit pricey.", 4));
+        reviewRepository.save(createReview(buyer1, product1, 6L,"Great product! Highly recommended.", 5));
+        reviewRepository.save(createReview(buyer2, product2, 7L, "Good quality, but a bit pricey.", 4));
     }
 
     private User createUser(String firstName, String lastName, String email, String password, Role role) {
@@ -225,12 +225,13 @@ public class DataInitializationService {
         return order;
     }
 
-    private Review createReview(Buyer buyer, Product product, String comment, int rating) {
+    private Review createReview(Buyer buyer, Product product, Long orderId, String comment, int rating) {
         Review review = new Review();
         review.setBuyer(buyer);
         review.setProduct(product);
         review.setComment(comment);
         review.setRating(rating);
+        review.setOrderId(orderId);
         return review;
     }
 }

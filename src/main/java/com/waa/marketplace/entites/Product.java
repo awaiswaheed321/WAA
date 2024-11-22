@@ -55,6 +55,12 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 
+    @OneToMany(mappedBy = "product")
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "product")
+    private List<CartItem> cartItems;
+
     @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdAt;

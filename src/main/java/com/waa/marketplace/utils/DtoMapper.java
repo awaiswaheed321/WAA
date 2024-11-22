@@ -61,6 +61,7 @@ public class DtoMapper {
                 .productName(review.getProduct().getName())
                 .rating(review.getRating())
                 .comment(review.getComment())
+                .orderId(review.getOrderId())
                 .build();
     }
 
@@ -75,19 +76,9 @@ public class DtoMapper {
                 .images(product.getImages() != null && !product.getImages().isEmpty()
                         ? product.getImages().stream().map(DtoMapper::mapToImageResponseDto).toList()
                         : List.of())
-                .seller(new SellerResponseDto(
-                        product.getSeller().getId(),
-                        product.getSeller().getUser().getFirstName(),
-                        product.getSeller().getUser().getLastName(),
-                        product.getSeller().getUser().getEmail()
-                ))
+                .seller(mapToSellerResponseDto(product.getSeller()))
                 .reviews(product.getReviews().stream()
-                        .map(review -> new ReviewResponseDto(
-                                review.getId(),
-                                product.getName(),
-                                review.getRating(),
-                                review.getComment()
-                        ))
+                        .map(DtoMapper::mapToReviewResponseDto)
                         .toList()
                 )
                 .build();
