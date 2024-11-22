@@ -1,10 +1,7 @@
 package com.waa.marketplace.entites;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "buyers")
+@ToString(exclude = {"cart"})
 public class Buyer {
     @Id
     private Long id;

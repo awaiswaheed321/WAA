@@ -30,13 +30,15 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final BuyerRepository buyerRepository;
+    private final CartRepository cartRepository;
 
     @Autowired
     public CartServiceImpl(CartItemRepository cartItemRepository,
-                           ProductRepository productRepository, BuyerRepository buyerRepository) {
+                           ProductRepository productRepository, BuyerRepository buyerRepository, CartRepository cartRepository) {
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
         this.buyerRepository = buyerRepository;
+        this.cartRepository = cartRepository;
     }
 
     @Override
@@ -115,16 +117,18 @@ public class CartServiceImpl implements CartService {
         return getCart();
     }
 
-    @Override
-    @Transactional
-    public void removeItemFromCart(Long cartItemId) {
-        Buyer buyer = getLoggedInBuyer();
-        Cart cart = buyer.getCart();
-        CartItem cartItem =
-                cart.getItems().stream().filter(item -> item.getId().equals(cartItemId)).findFirst()
-                        .orElseThrow(() -> new RuntimeException("Cart item not found"));
-        cartItemRepository.delete(cartItem);
-    }
+@Override
+@Transactional
+public void removeItemFromCart(Long cartItemId) {
+    Buyer buyer = getLoggedInBuyer();
+    Cart cart = buyer.getCart();
+    CartItem cartItem =
+            cart.getItems().stream().filter(item -> item.getId().equals(cartItemId)).findFirst()
+                    .orElseThrow(() -> new RuntimeException("Cart item not found"));
+    cart.getItems().removeIf(item -> item.getId().equals(cartItemId));
+    cartItemRepository.delete(cartItem);
+    cartRepository.save(cart);
+}
 
     @Override
     @Transactional
