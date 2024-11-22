@@ -124,7 +124,13 @@ public class DataInitializationService {
         Product product2 = products.get(1);
 
         orderRepository.save(createOrder(buyer1, product1, 2, OrderStatus.PENDING));
+        orderRepository.save(createOrder(buyer2, product1, 2, OrderStatus.PENDING));
         orderRepository.save(createOrder(buyer2, product2, 1, OrderStatus.SHIPPED));
+        orderRepository.save(createOrder(buyer2, product1, 1, OrderStatus.SHIPPED));
+        orderRepository.save(createOrder(buyer1, product1, 2, OrderStatus.PENDING));
+        orderRepository.save(createOrder(buyer2, product1, 2, OrderStatus.PENDING));
+        orderRepository.save(createOrder(buyer2, product2, 1, OrderStatus.SHIPPED));
+        orderRepository.save(createOrder(buyer2, product1, 1, OrderStatus.SHIPPED));
     }
 
     private void initializeReviews() {
