@@ -30,7 +30,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"alice.johnson@example.com\",\r\n    \"password\": \"alice123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"alice.johnson@example.com\",\r\n    \"password\": \"plmokn123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -86,7 +86,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"admin123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"plmokn123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -142,7 +142,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"john.doe@example.com\",\r\n    \"password\": \"john123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"john.doe@example.com\",\r\n    \"password\": \"plmokn123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
