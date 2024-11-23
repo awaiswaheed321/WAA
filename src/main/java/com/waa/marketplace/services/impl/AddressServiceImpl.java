@@ -6,6 +6,7 @@ import com.waa.marketplace.entites.Address;
 import com.waa.marketplace.entites.Buyer;
 import com.waa.marketplace.repositories.AddressRepository;
 import com.waa.marketplace.repositories.BuyerRepository;
+import com.waa.marketplace.repositories.OrderRepository;
 import com.waa.marketplace.services.AddressService;
 import com.waa.marketplace.utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,10 +20,12 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
     private final BuyerRepository buyerRepository;
+    private final OrderRepository orderRepository;
 
-    public AddressServiceImpl(AddressRepository addressRepository, BuyerRepository buyerRepository) {
+    public AddressServiceImpl(AddressRepository addressRepository, BuyerRepository buyerRepository, OrderRepository orderRepository) {
         this.addressRepository = addressRepository;
         this.buyerRepository = buyerRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -70,7 +73,13 @@ public class AddressServiceImpl implements AddressService {
         Buyer buyer = getLoggedInBuyer();
         Address address = addressRepository.findByIdAndBuyerId(id, buyer.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Address not found"));
+        boolean isUsedInOrders = orderRepository.existsByAddressId(address.getId());
+        if (isUsedInOrders) {
+            throw new IllegalStateException("Address cannot be deleted as it is associated with an order.");
+        }
+//        buyer.getAddresses().remove(address);
         addressRepository.delete(address);
+//        buyerRepository.save(buyer);
     }
 
     @Override

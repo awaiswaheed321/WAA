@@ -65,7 +65,7 @@ public class DataInitializationService {
     }
 
     private void initializeAdmin() {
-        User adminUser = createUser("System", "Admin", "admin@example.com", "admin123", Role.ADMIN);
+        User adminUser = createUser("System", "Admin", "admin@example.com", "plmokn123", Role.ADMIN);
         Admin admin = new Admin();
         admin.setUser(adminUser);
         adminRepository.save(admin);
@@ -73,15 +73,17 @@ public class DataInitializationService {
 
     private void initializeBuyers() {
         // Buyer 1
-        Buyer buyer1 = createBuyer("John", "Doe", "john.doe@example.com", "john123");
+        Buyer buyer1 = createBuyer("John", "Doe", "john.doe@example.com", "plmokn123");
         buyer1.getAddresses().add(createAddress(buyer1, "123 Main St", "Shipping City", "Shipping State", "12345",
                 "USA"));
         buyer1.getAddresses().add(createAddress(buyer1, "456 Elm St", "Billing City", "Billing State", "12345", "USA"
         ));
+        buyer1.getAddresses().add(createAddress(buyer1, "New Elm St", "Billing City", "Billing State", "12345", "USA"
+        ));
         buyerRepository.save(buyer1);
 
         // Buyer 2
-        Buyer buyer2 = createBuyer("Jane", "Smith", "jane.smith@example.com", "jane123");
+        Buyer buyer2 = createBuyer("Jane", "Smith", "jane.smith@example.com", "plmokn123");
         buyer2.getAddresses().add(createAddress(buyer2, "789 Oak St", "Shipping City 2", "Shipping State 2", "09876",
                 "USA"));
         buyer2.getAddresses().add(createAddress(buyer2, "101 Pine Ave", "Billing City 2", "Billing State 2", "54321",
@@ -91,11 +93,11 @@ public class DataInitializationService {
 
     private void initializeSellers() {
         // Seller 1
-        Seller seller1 = createSeller("Alice", "Johnson", "alice.johnson@example.com", "alice123", true);
+        Seller seller1 = createSeller("Alice", "Johnson", "alice.johnson@example.com", "plmokn123", true);
         sellerRepository.save(seller1);
 
         // Seller 2
-        Seller seller2 = createSeller("Bob", "Brown", "bob.brown@example.com", "bob123", false);
+        Seller seller2 = createSeller("Bob", "Brown", "bob.brown@example.com", "plmokn123", false);
         sellerRepository.save(seller2);
     }
 

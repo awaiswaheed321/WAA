@@ -8,6 +8,7 @@ import com.waa.marketplace.entites.Category;
 import com.waa.marketplace.entites.Review;
 import com.waa.marketplace.entites.Seller;
 import com.waa.marketplace.repositories.CategoryRepository;
+import com.waa.marketplace.repositories.ProductRepository;
 import com.waa.marketplace.repositories.ReviewRepository;
 import com.waa.marketplace.repositories.SellerRepository;
 import com.waa.marketplace.services.AdminService;
@@ -25,13 +26,15 @@ public class AdminServiceImpl implements AdminService {
     private final SellerRepository sellerRepository;
     private final ReviewRepository reviewRepository;
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public AdminServiceImpl(SellerRepository sellerRepository, ReviewRepository reviewRepository,
-                            CategoryRepository categoryRepository) {
+                            CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.sellerRepository = sellerRepository;
         this.reviewRepository = reviewRepository;
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -88,6 +91,10 @@ public class AdminServiceImpl implements AdminService {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Category " +
                 "not found"));
         if (!category.getProducts().isEmpty()) {
+            throw new IllegalArgumentException("Category can not be deleted as it has products.");
+        }
+        boolean exists = productRepository.existsByCategoryId(category.getId());
+        if(exists) {
             throw new IllegalArgumentException("Category can not be deleted as it has products.");
         }
         categoryRepository.delete(category);
